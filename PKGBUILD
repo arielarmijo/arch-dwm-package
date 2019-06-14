@@ -12,8 +12,7 @@ arch=('x86_64')
 license=('MIT')
 options=(zipman)
 depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode' 'libpulse' 'acpilight' 'scrot')
-source=(
-		http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		config.h
 		dwm.desktop
 		attachbelow.diff
@@ -24,8 +23,7 @@ source=(
 		sticky.diff
 )
 
-sha256sums=(
-			'97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
+sha256sums=('97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
 			SKIP
 			'28c8d5bcaca83b7e945d6f52e91d3941f6d67e489d8a8484cc20546a8149bbf4'
 			'19f9f86a5edd19c627b9d5242002783c242648255b4b3aa7afaa55dbc1d1fc10'
@@ -33,7 +31,7 @@ sha256sums=(
 			'11738a343ce3e5092b7eacf08f6f5c638f14fba2b2f8fe82d9b8e1864c949e22'
 			'2d1047ff0c5863f4188140ca1f405a558e94611e4eff2ff0fb5f70e32fddd44a'
 			'dad8ddab41eb21a10cb9e667e124c29e911f147a2623c851b97a82e4e6f8330a'
-			SKIP
+			'4fb0a5aeba90532a26fb9d1f199434cebe288f41c78120022d38eccfcab2f736'
 )
 
 prepare() {
