@@ -1,2 +1,5 @@
 # dwm
-DWM-6.2 custom configuration and patches
+Arch Build System custom configuration and patches files for dwm-6.2.
+
+
+
