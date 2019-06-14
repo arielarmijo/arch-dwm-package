@@ -11,7 +11,7 @@ url="http://dwm.suckless.org"
 arch=('x86_64')
 license=('MIT')
 options=(zipman)
-depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode')
+depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode' 'libpulse' 'acpilight' 'scrot')
 source=(
 		http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		config.h
@@ -33,7 +33,7 @@ sha256sums=(
 			'11738a343ce3e5092b7eacf08f6f5c638f14fba2b2f8fe82d9b8e1864c949e22'
 			'2d1047ff0c5863f4188140ca1f405a558e94611e4eff2ff0fb5f70e32fddd44a'
 			'dad8ddab41eb21a10cb9e667e124c29e911f147a2623c851b97a82e4e6f8330a'
-			'4fb0a5aeba90532a26fb9d1f199434cebe288f41c78120022d38eccfcab2f736'
+			SKIP
 )
 
 prepare() {
