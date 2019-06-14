@@ -77,7 +77,8 @@ static const char *volumedowncmd[] = { "pactl", "set-sink-volume", "0", "-5%", N
 static const char *volumemutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL };
 static const char *brightnessupcmd[]   = { "xbacklight", "-inc", "5", NULL };
 static const char *brightnessdowncmd[] = { "xbacklight", "-dec", "5", NULL };
-static const char *screenshotcmd[]= { "scrot", "%Y-%m-%d-%H%M%S_screenshot.png", NULL}; 
+static const char *screenshotcmd[]= { "scrot", "%Y-%m-%d-%T_screenshot.png", NULL}; 
+static const char *screenshotfocusedcmd[]= { "scrot", "-u", "%Y-%m-%d-%T_screenshot.png", NULL}; 
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
@@ -90,6 +91,7 @@ static Key keys[] = {
 	{ 0,             XF86XK_MonBrightnessUp,   spawn,          {.v = brightnessupcmd } },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = brightnessdowncmd } },
 	{ 0,							XK_Print,  spawn,          {.v = screenshotcmd } },
+	{ MODKEY,						XK_Print,  spawn,          {.v = screenshotfocusedcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_Down,   focusstack,     {.i = +1 } },
