@@ -31,11 +31,11 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class			instance    title				tags mask     isfloating   monitor */
+//	{ "Chromium",		NULL,       NULL,				 1 << 8,       0,           -1 },
 	{ "Gimp",			NULL,       "Inicio de GIMP",	 0,            1,           -1 },
 	{ "Galculator",		NULL,       NULL,				 0,            1,           -1 },
 	{ "Pavucontrol",    NULL,       NULL,				 0,            1,           -1 },
 	{ "mpv",		    NULL,       NULL,				 0,            1,           -1 },
-//	{ "Chromium",		NULL,       NULL,				 1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -77,6 +77,7 @@ static const char *volumedowncmd[] = { "pactl", "set-sink-volume", "0", "-5%", N
 static const char *volumemutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL };
 static const char *brightnessupcmd[]   = { "xbacklight", "-inc", "5", NULL };
 static const char *brightnessdowncmd[] = { "xbacklight", "-dec", "5", NULL };
+static const char *screenshotcmd[]= { "scrot", "%Y-%m-%d-%H%M%S_screenshot.png", NULL}; 
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
@@ -88,6 +89,7 @@ static Key keys[] = {
 	{ 0,             XF86XK_AudioMute,         spawn,          {.v = volumemutecmd } },
 	{ 0,             XF86XK_MonBrightnessUp,   spawn,          {.v = brightnessupcmd } },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = brightnessdowncmd } },
+	{ 0,							XK_Print,  spawn,          {.v = screenshotcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_Down,   focusstack,     {.i = +1 } },
