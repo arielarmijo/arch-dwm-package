@@ -23,6 +23,7 @@ source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		savefloats.diff
 		systray.diff
 		sticky.diff
+		wtitlebg.diff
 )
 
 sha256sums=('97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
@@ -35,6 +36,7 @@ sha256sums=('97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
 			'88a08be82939fc57ab1c999a701a53e97644a02a8e7f269f986a507b8c62e340'
 			'2d1047ff0c5863f4188140ca1f405a558e94611e4eff2ff0fb5f70e32fddd44a'
 			'4fb0a5aeba90532a26fb9d1f199434cebe288f41c78120022d38eccfcab2f736'
+			'1a5ddf322a82e41605db294ba91dc51f680dca5cd7a4cae203d8aaa4da5e5c6b'
 )
 
 prepare() {
@@ -46,6 +48,7 @@ prepare() {
   patch --strip=1 --input="${srcdir}/savefloats.diff"
   patch --strip=1 --input="${srcdir}/center.diff"
   patch --strip=1 --input="${srcdir}/autostart.diff"
+  patch --strip=1 --input="${srcdir}/wtitlebg.diff"
   cp "$srcdir/config.h" config.h
 }
 
