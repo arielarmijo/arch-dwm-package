@@ -72,25 +72,20 @@ static void tagcycle(const Arg *arg);
 static char dmenumon[2]       = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "urxvtc", NULL };
-static const char *screenshotcmd[]        = { "scrot", "%Y-%m-%d-%T_screenshot.png", NULL}; 
-static const char *screenshotfocusedcmd[] = { "scrot", "-u", "%Y-%m-%d-%T_screenshot.png", NULL}; 
-static const char *playerplaypausecmd[] = { "playerctl", "play-pause", NULL}; 
-static const char *playerpreviouscmd[]  = { "playerctl", "previous", NULL}; 
-static const char *playernextcmd[]      = { "playerctl", "next", NULL}; 
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ 0,							XK_Print,  spawn,		   {.v = screenshotcmd } },
-	{ MODKEY,						XK_Print,  spawn,          {.v = screenshotfocusedcmd } },
-	{ MODKEY,                       XK_F9,	   spawn,		   {.v = playerplaypausecmd } },
-	{ MODKEY,                       XK_F11,	   spawn,		   {.v = playerpreviouscmd } },
-	{ MODKEY,                       XK_F12,	   spawn,		   {.v = playernextcmd } },
+	{ 0,							XK_Print,  spawn,		   SHCMD("~/.local/bin/notebook-state screen_shot") },
+	{ MODKEY,						XK_Print,  spawn,          SHCMD("~/.local/bin/notebook-state screen_shot_focused")  },
+	{ 0,		                    XK_F9,	   spawn,		   SHCMD("~/.local/bin/notebook-state player_play") },
+	{ 0,				            XK_F11,	   spawn,		   SHCMD("~/.local/bin/notebook-state player_previous") },
+	{ 0,						    XK_F12,	   spawn,		   SHCMD("~/.local/bin/notebook-state player_next") },
 	{ Mod1Mask|ControlMask,         XK_Delete, spawn,          SHCMD("~/.local/bin/notebook-state kill_session") },
 	{ MODKEY,						XK_F6,	   spawn,          SHCMD("~/.local/bin/notebook-state toggle_autolock") },
-	{ 0,             XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state lock_screen") },
+	{ 0,             XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state screen_lock") },
 	{ MODKEY,        XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state screen_off") },
 	{ 0,			 XK_Caps_Lock,			   spawn,          SHCMD("~/.local/bin/notebook-state caps_lock") },
 	{ 0,			 XK_Num_Lock,			   spawn,          SHCMD("~/.local/bin/notebook-state num_lock") },

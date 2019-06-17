@@ -12,8 +12,6 @@ arch=('x86_64')
 license=('MIT')
 options=(zipman)
 depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode')
-optdepends=('scrot: screenshot support'
-			'playerctl: media player control')
 source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		config.h
 		dwm.desktop
