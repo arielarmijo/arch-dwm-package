@@ -72,8 +72,11 @@ static void tagcycle(const Arg *arg);
 static char dmenumon[2]       = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "urxvtc", NULL };
-static const char *screenshotcmd[]= { "scrot", "%Y-%m-%d-%T_screenshot.png", NULL}; 
-static const char *screenshotfocusedcmd[]= { "scrot", "-u", "%Y-%m-%d-%T_screenshot.png", NULL}; 
+static const char *screenshotcmd[]        = { "scrot", "%Y-%m-%d-%T_screenshot.png", NULL}; 
+static const char *screenshotfocusedcmd[] = { "scrot", "-u", "%Y-%m-%d-%T_screenshot.png", NULL}; 
+static const char *playerplaypausecmd[] = { "playerctl", "play-pause", NULL}; 
+static const char *playerpreviouscmd[]  = { "playerctl", "previous", NULL}; 
+static const char *playernextcmd[]      = { "playerctl", "next", NULL}; 
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
@@ -82,16 +85,20 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ 0,							XK_Print,  spawn,		   {.v = screenshotcmd } },
 	{ MODKEY,						XK_Print,  spawn,          {.v = screenshotfocusedcmd } },
-	{ MODKEY,            XF86XK_ScreenSaver,   spawn,          SHCMD("sleep 0.8 && xset dpms force off") },
-	{ 0,                 XF86XK_ScreenSaver,   spawn,          SHCMD("~/.local/bin/lock-screen") },
+	{ MODKEY,                       XK_F9,	   spawn,		   {.v = playerplaypausecmd } },
+	{ MODKEY,                       XK_F11,	   spawn,		   {.v = playerpreviouscmd } },
+	{ MODKEY,                       XK_F12,	   spawn,		   {.v = playernextcmd } },
+	{ Mod1Mask|ControlMask,         XK_Delete, spawn,          SHCMD("~/.local/bin/notebook-state kill_session") },
 	{ MODKEY,						XK_F6,	   spawn,          SHCMD("~/.local/bin/notebook-state toggle_autolock") },
-	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("~/.local/bin/notebook-state volume_up") },
-	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD("~/.local/bin/notebook-state volume_down") },
-	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD("~/.local/bin/notebook-state mute") },
+	{ 0,             XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state lock_screen") },
+	{ MODKEY,        XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state screen_off") },
+	{ 0,			 XK_Caps_Lock,			   spawn,          SHCMD("~/.local/bin/notebook-state caps_lock") },
+	{ 0,			 XK_Num_Lock,			   spawn,          SHCMD("~/.local/bin/notebook-state num_lock") },
 	{ 0,             XF86XK_MonBrightnessUp,   spawn,		   SHCMD("~/.local/bin/notebook-state backlight_up") },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD("~/.local/bin/notebook-state backlight_down") },
-	{ 0,				XK_Caps_Lock,		   spawn,          SHCMD("~/.local/bin/notebook-state caps_lock") },
-	{ 0,				XK_Num_Lock,		   spawn,          SHCMD("~/.local/bin/notebook-state num_lock") },
+	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD("~/.local/bin/notebook-state mute") },
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD("~/.local/bin/notebook-state volume_down") },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("~/.local/bin/notebook-state volume_up") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_Down,   focusstack,     {.i = +1 } },
@@ -128,7 +135,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ Mod1Mask|ControlMask,           XK_Delete, spawn,          SHCMD("~/.local/bin/kill-session") },
 };
 
 /* button definitions */
