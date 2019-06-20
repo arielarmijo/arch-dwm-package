@@ -20,7 +20,6 @@ source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		center.diff
 		pertag.diff
 		savefloats.diff
-#		systray.diff
 		statuscolors-systray.diff
 		sticky.diff
 		wtitlebg.diff
@@ -34,7 +33,6 @@ sha256sums=('97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
 			'203061d727168196dae6af9b4c347868eef538100bfa83d77bbd32b85befbe2f'
 			'11738a343ce3e5092b7eacf08f6f5c638f14fba2b2f8fe82d9b8e1864c949e22'
 			'88a08be82939fc57ab1c999a701a53e97644a02a8e7f269f986a507b8c62e340'
-#			'2d1047ff0c5863f4188140ca1f405a558e94611e4eff2ff0fb5f70e32fddd44a'
 			'9d3557b9963ab41262704f7d76f87f2f6e5b9616893ad906a79c8fd6c6316dc4'
 			'4fb0a5aeba90532a26fb9d1f199434cebe288f41c78120022d38eccfcab2f736'
 			'1a5ddf322a82e41605db294ba91dc51f680dca5cd7a4cae203d8aaa4da5e5c6b'
@@ -42,7 +40,6 @@ sha256sums=('97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e'
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
-# patch --strip=1 --input="${srcdir}/systray.diff"
   patch --strip=1 --input="${srcdir}/statuscolors-systray.diff"
   patch --strip=1 --input="${srcdir}/pertag.diff"
   patch --strip=1 --input="${srcdir}/sticky.diff"
