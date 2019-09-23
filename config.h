@@ -9,8 +9,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=9" };
-static const char dmenufont[]       = "monospace:size=9";
+static const char *fonts[]          = { "DejaVuSansMono Nerd Font:size=9" };
+static const char dmenufont[]       = "DejaVuSansMono Nerd Font:size=9";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -34,12 +34,16 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class			instance    title				tags mask	iscentered     isfloating   monitor */
-//	{ "Chromium",		NULL,       NULL,				 1 << 8,    0,			   0,           -1 },
-	{ "Gimp",			NULL,       "Inicio de GIMP",	 0,         0,			   1,           -1 },
-	{ "Galculator",		NULL,       NULL,				 0,         1,			   1,           -1 },
-	{ "Pavucontrol",    NULL,       NULL,				 0,         1,			   1,           -1 },
-	{ "mpv",		    NULL,       NULL,				 0,         1,			   1,           -1 },
+	/* class			  instance   title				tags mask	iscentered     isfloating   monitor */
+	{ "Gimp",			   NULL,     "Inicio de GIMP",		0,      0,			   1,           -1 },
+	{ "GLFW-Application",  NULL,      NULL,					0,      1,			   1,           -1 },
+	{ "GoldenDict",		   NULL,      NULL,					0,      1,			   1,           -1 },
+	{ "Galculator",		   NULL,      NULL,					0,      1,			   1,           -1 },
+	{ "mpv",			   NULL,      NULL,					0,      1,			   1,           -1 },
+	{  NULL,			  "cmus",     NULL,				 1 << 8,    0,			   0,           -1 },
+	{  NULL,			  "dropdown", NULL,					0,      0,			   1,           -1 },
+	{ "Pavucontrol",	   NULL,      NULL,					0,      1,			   1,           -1 },
+	{ "Transmission-gtk",  NULL,      NULL,			     1 << 8,    1,			   1,           -1 },
 };
 
 /* layout(s) */
@@ -82,6 +86,9 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,						XK_c,	   spawn,          SHCMD("/usr/bin/gsimplecal") },
+	{ MODKEY,						XK_o,	   spawn,          SHCMD("~/.local/bin/notebook-state floating-terminal") },
+	{ MODKEY,						XK_r,	   spawn,          SHCMD("~/.local/bin/notebook-state open-ranger") },
 	{ 0,							XK_Print,  spawn,		   SHCMD("~/.local/bin/notebook-state screen-shot") },
 	{ MODKEY,						XK_Print,  spawn,          SHCMD("~/.local/bin/notebook-state screen-shot-focused") },
 	{ 0,		                    XK_F9,	   spawn,		   SHCMD("~/.local/bin/notebook-state player-play") },
@@ -89,6 +96,10 @@ static Key keys[] = {
 	{ 0,						    XK_F12,	   spawn,		   SHCMD("~/.local/bin/notebook-state player-next") },
 	{ Mod1Mask|ControlMask,         XK_Delete, spawn,          SHCMD("~/.local/bin/notebook-state session-kill") },
 	{ MODKEY,						XK_F6,	   spawn,          SHCMD("~/.local/bin/notebook-state toggle-autolock") },
+	{ 0,		     XF86XK_AudioPlay,         spawn,		   SHCMD("~/.local/bin/notebook-state player-play") },
+	{ 0,		     XF86XK_AudioPause,        spawn,		   SHCMD("~/.local/bin/notebook-state player-play") },
+	{ 0,			 XF86XK_AudioPrev,	       spawn,		   SHCMD("~/.local/bin/notebook-state player-previous") },
+	{ 0,			 XF86XK_AudioNext,	       spawn,		   SHCMD("~/.local/bin/notebook-state player-next") },
 	{ 0,             XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state screen-lock") },
 	{ MODKEY,        XF86XK_ScreenSaver,	   spawn,          SHCMD("~/.local/bin/notebook-state screen-off") },
 	{ 0,			 XK_Caps_Lock,			   spawn,          SHCMD("~/.local/bin/notebook-state caps-lock") },
@@ -111,7 +122,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Right,  setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_Tab,    tagcycle,          {1} },
+	{ MODKEY|ShiftMask,             XK_Tab,    tagcycle,       {1} },
 	{ MODKEY,		                XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
@@ -152,6 +163,7 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
+
 
 /* custom functions */
 
