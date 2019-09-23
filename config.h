@@ -43,7 +43,7 @@ static const Rule rules[] = {
 	{  NULL,			  "cmus",     NULL,				 1 << 8,    0,			   0,           -1 },
 	{  NULL,			  "dropdown", NULL,					0,      0,			   1,           -1 },
 	{ "Pavucontrol",	   NULL,      NULL,					0,      1,			   1,           -1 },
-	{ "Transmission-gtk",  NULL,      NULL,			     1 << 8,    1,			   1,           -1 },
+	{ "Transmission-gtk",  NULL,      NULL,			     1 << 8,    0,			   0,           -1 },
 };
 
 /* layout(s) */
