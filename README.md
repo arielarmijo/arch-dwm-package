@@ -8,9 +8,24 @@ PKGBUILD with custom configuration and patches files for dwm-6.2.
 ```
 git clone https://github.com/cochayuyo/dwm.git
 cd dwm
-makepkg -si
+makepkg -sci
 ```
+# Patches
+```
+attachbelow
+center
+movestack
+pertag
+save floats
+scratchpad
+status2d
+statusallmons
+titlecolor
+```
+# Autostart applications
+Autostart applications are executed using ~/.xprofile file that is sourced by lxdm after user logs on. This file and can be found in the following link: https://github.com/cochayuyo/dotfiles/blob/master/.xprofile
 
-Auxiliary scripts that control special keys like XK_Caps_Lock, XF86XK_ScreenSaver, XF86XK_MonBrightnessDown, etc. can be found at the following link: https://github.com/cochayuyo/dotfiles/blob/master/.local/bin/notebook-state
+# Scripts
+Auxiliary script that control special keys like XK_Caps_Lock, XF86XK_ScreenSaver, XF86XK_MonBrightnessDown, and so on, can be found at the following link: https://github.com/cochayuyo/dotfiles/blob/master/.local/bin/notebook-state
 
-Script that controls the applications that start automatically and the status bar information can be found in the following link https://github.com/cochayuyo/dotfiles/blob/master/.config/dwm/autostart.sh
+The status bar script can be found in this link: https://github.com/cochayuyo/dotfiles/blob/master/.local/bin/statusbar
