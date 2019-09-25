@@ -12,15 +12,18 @@ makepkg -sci
 ```
 # Patches
 ```
-attachbelow
-center
-movestack
-pertag
-save floats
-scratchpad
-status2d
-statusallmons
-titlecolor
+[attachbelow](https://dwm.suckless.org/patches/attachbelow/dwm-attachbelow-toggleable-6.2.diff)
+[center](https://dwm.suckless.org/patches/center/dwm-center-6.1.diff)
+[movestack](https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff)
+[pertag](https://dwm.suckless.org/patches/pertag/dwm-pertag-20170513-ceac8c9.diff)
+[save floats](https://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff)
+[scratchpad](https://dwm.suckless.org/patches/scratchpad/dwm-scratchpad-6.2.diff)
+[status2d](https://dwm.suckless.org/patches/status2d/dwm-status2d-20161231-bb3bd6f.diff)
+[statusallmons](https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-20160731-56a31dc.diff)
+[titlecolor](https://dwm.suckless.org/patches/titlecolor/dwm-titlecolor-20190206-6.2.diff)
+[urgentborder](https://dwm.suckless.org/patches/urgentborder/dwm-6.1-min-border.diff)
+[urgent tag color](https://github.com/ericpruitt/mydwm/blob/master/patches/00-urgent-tag-color.diff)
+
 ```
 # Autostart applications
 Autostart applications are executed using ~/.xprofile file that is sourced by lxdm after user logs on. This file and can be found in the following link: https://github.com/cochayuyo/dotfiles/blob/master/.xprofile
