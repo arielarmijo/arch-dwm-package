@@ -12,16 +12,16 @@ makepkg -sci
 ```
 # Patches
 
-- [attachbelow](https://dwm.suckless.org/patches/attachbelow/dwm-attachbelow-toggleable-6.2.diff)
+- [attachbelow](https://dwm.suckless.org/patches/attachbelow/)
 - [center floating windows](https://github.com/ericpruitt/edge/blob/master/patches/dwm-10-center-floating-windows.diff)
-- [movestack](https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff)
-- [pertag](https://dwm.suckless.org/patches/pertag/dwm-pertag-20170513-ceac8c9.diff)
-- [save floats](https://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff)
-- [scratchpad](https://dwm.suckless.org/patches/scratchpad/dwm-scratchpad-6.2.diff)
-- [status2d](https://dwm.suckless.org/patches/status2d/dwm-status2d-20161231-bb3bd6f.diff)
-- [statusallmons](https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-20160731-56a31dc.diff)
-- [titlecolor](https://dwm.suckless.org/patches/titlecolor/dwm-titlecolor-20190206-6.2.diff)
-- [urgentborder](https://dwm.suckless.org/patches/urgentborder/dwm-6.1-min-border.diff)
+- [movestack](https://dwm.suckless.org/patches/movestack/)
+- [pertag](https://dwm.suckless.org/patches/pertag/)
+- [save floats](https://dwm.suckless.org/patches/save_floats/)
+- [scratchpad](https://dwm.suckless.org/patches/scratchpad/)
+- [status2d](https://dwm.suckless.org/patches/status2d/)
+- [statusallmons](https://dwm.suckless.org/patches/statusallmons/)
+- [titlecolor](https://dwm.suckless.org/patches/titlecolor/)
+- [urgentborder](https://dwm.suckless.org/patches/urgentborder/)
 - [urgent tag color](https://github.com/ericpruitt/mydwm/blob/master/patches/00-urgent-tag-color.diff)
 
 # Autostart applications
