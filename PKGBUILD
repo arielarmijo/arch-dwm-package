@@ -15,18 +15,18 @@ depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode')
 source=(config.h
 		http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
 		dwm.desktop
-		dwm-patches-6.2.diff
+		dwm-patches.diff
 )
 
 sha256sums=(SKIP
 			97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e
 			28c8d5bcaca83b7e945d6f52e91d3941f6d67e489d8a8484cc20546a8149bbf4
-			d45168489ef81768f0f54ade3e4afde34ba0ad94257606bcad28a9e8e0643a56
+			SKIP
 )
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
-  patch --strip=1 --input="${srcdir}/dwm-patches-6.2.diff"
+  patch --strip=1 --input="${srcdir}/dwm-patches.diff"
   cp "$srcdir/config.h" config.h
 }
 

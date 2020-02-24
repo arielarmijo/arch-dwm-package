@@ -13,7 +13,7 @@ makepkg -sci
 # Patches
 
 - [attachbelow](https://dwm.suckless.org/patches/attachbelow/dwm-attachbelow-toggleable-6.2.diff)
-- [center](https://dwm.suckless.org/patches/center/dwm-center-6.1.diff)
+- [center floating windows](https://github.com/ericpruitt/edge/blob/master/patches/dwm-10-center-floating-windows.diff)
 - [movestack](https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff)
 - [pertag](https://dwm.suckless.org/patches/pertag/dwm-pertag-20170513-ceac8c9.diff)
 - [save floats](https://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff)
