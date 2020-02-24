@@ -28,6 +28,6 @@ makepkg -sci
 Autostart applications are executed using [~/.xprofile](https://github.com/cochayuyo/dotfiles/blob/master/.xprofile)
 file that is sourced by lxdm after user logs on.
 # Scripts
-Auxiliary script that control special keys like XK_Caps_Lock, XF86XK_ScreenSaver, XF86XK_MonBrightnessDown, and so on, can be found at the following link: https://github.com/cochayuyo/dotfiles/blob/master/.local/bin/key-bindings
+Auxiliary script that control special keys like XK_Caps_Lock, XF86XK_ScreenSaver, XF86XK_MonBrightnessDown, and so on, can be found at the following link: https://github.com/cochayuyo/dwm/blob/master/scripts/key-bindings
 
-The status bar script can be found in this link: https://github.com/cochayuyo/dotfiles/blob/master/.local/bin/statusbar
+The status bar script can be found in this link: https://github.com/cochayuyo/dwm/blob/master/scripts/statusbar
