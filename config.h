@@ -25,13 +25,15 @@ static const char *colors[][3]			 = {
 	[SchemeNorm]  = { col_gray3, col_gray1, col_gray1 },
 	[SchemeSel]   = { col_gray4, col_cyan,  col_cyan  },
 	[SchemeTitle] = { col_gray4, col_gray1, col_gray1 },
-	[SchemeUrg]   = { col_gray1, col_red,   col_red   },
+	[SchemeUrg]   = { col_red,	 col_gray1, col_red   },
 };
 
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
+
+/* Rules */
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -41,13 +43,13 @@ static const Rule rules[] = {
 //	{ "GLFW-Application",	NULL,			NULL,				0,				1,           -1 },
 	{ "GoldenDict",			NULL,			NULL,				0,				1,           -1 },
 	{ "Galculator",			NULL,			NULL,				0,				1,           -1 },
+	{ "Java",			   "java",			NULL,				0,				1,           -1 },
 	{ "mpv",				NULL,			NULL,				0,				1,           -1 },
 	{ "URxvt",			   "cmus",			NULL,				1 << 8,			0,           -1 },
 	{ "Pavucontrol",		NULL,			NULL,				0,				1,           -1 },
 	{ "Transmission-gtk",	NULL,			NULL,				1 << 8,			0,           -1 },
 	{ "Xsane",				NULL,			NULL,				0,				1,           -1 },
 };
-
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
@@ -79,7 +81,6 @@ static const Layout layouts[] = {
 /* custom functions declarations */
 static void shiftview(const Arg *arg);
 
-
 /* commands */
 static char dmenumon[2]				= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]		= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
@@ -93,15 +94,16 @@ static Key keys[] = {
 	{ MODKEY,				XK_o,						spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,		XK_o,						togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY|ShiftMask,		XK_Return,					spawn,          {.v = termcmd } },
+	{ MODKEY|ShiftMask,		XK_x,						spawn,			SHCMD("/usr/bin/xkill") },
+	{ MODKEY,				XK_e,						spawn,			SHCMD("~/.local/bin/dmenu_exit") },
 	{ MODKEY,				XK_p,						spawn,			SHCMD("~/.local/bin/dmenu_display") },
+	{ MODKEY|ShiftMask,		XK_q,						spawn,			SHCMD("~/.local/bin/key-bindings session-kill") },
 	{ MODKEY|ShiftMask,		XK_p,						spawn,			SHCMD("~/.local/bin/key-bindings open pcmanfm") },
 	{ MODKEY|ShiftMask,		XK_r,						spawn,			SHCMD("~/.local/bin/key-bindings open ranger") },
-	{ MODKEY|ShiftMask,		XK_x,						spawn,			SHCMD("/usr/bin/xkill") },
 	{ MODKEY|ShiftMask,		XK_c,						spawn,			SHCMD("~/.local/bin/key-bindings open chromium") },
-	{ MODKEY,				XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot") },
-	{ MODKEY|ShiftMask,		XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot-focused") },
+	{ 0,					XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot") },
+	{ ShiftMask,			XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot-focused") },
 	{ 0,					XK_Caps_Lock,				spawn,			SHCMD("~/.local/bin/key-bindings caps-lock") },
-//	{ 0,					XK_Num_Lock,				spawn,			SHCMD("~/.local/bin/key-bindings num-lock") },
 	{ 0,					XF86XK_AudioPlay,			spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
 	{ 0,					XF86XK_AudioPause,			spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
 	{ 0,					XF86XK_AudioPrev,			spawn,			SHCMD("~/.local/bin/key-bindings player-previous") },
@@ -120,12 +122,18 @@ static Key keys[] = {
 	{ Mod1Mask,				XK_space,					spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toogle") },
 	{ 0,					XF86XK_TouchpadToggle,		spawn,			SHCMD("~/.local/bin/key-bindings toggle-touchpad") },
 	{ MODKEY,				XK_b,						togglebar,      {0} },
+	{ MODKEY|ShiftMask,     XK_space,					togglefloating, {0} },
+	{ MODKEY,               XK_s,					    togglesticky,   {0} },
+	{ MODKEY|ShiftMask,     XK_f,						togglefullscr,  {0} },
 	{ MODKEY,               XK_j,						focusstack,     {.i = +1 } },
 	{ MODKEY,               XK_k,						focusstack,     {.i = -1 } },
 	{ MODKEY,               XK_i,						incnmaster,     {.i = +1 } },
 	{ MODKEY,               XK_d,						incnmaster,     {.i = -1 } },
 	{ MODKEY,               XK_h,						setmfact,       {.f = -0.05} },
 	{ MODKEY,               XK_l,						setmfact,       {.f = +0.05} },
+	{ MODKEY|ShiftMask,     XK_h,					    setcfact,       {.f = +0.25} },
+	{ MODKEY|ShiftMask,     XK_l,						setcfact,       {.f = -0.25} },
+	{ MODKEY|Mod1Mask,		XK_o,					    setcfact,       {.f =  0.00} },
 	{ MODKEY|ShiftMask,     XK_j,						movestack,      {.i = +1 } },
 	{ MODKEY|ShiftMask,     XK_k,						movestack,      {.i = -1 } },
 	{ MODKEY,				XK_Up,						focusstack,		{.i = -1 } },
@@ -134,8 +142,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,     XK_Down,					movestack,      {.i = +1 } },
 	{ MODKEY,				XK_Left,					setmfact,		{.f = -0.05} },
 	{ MODKEY,				XK_Right,					setmfact,		{.f = +0.05} },
-	{ MODKEY,				XK_Page_Up,					shiftview,		{.i = +1 } },
-	{ MODKEY,				XK_Page_Down,				shiftview,		{.i = -1 } },
+	{ MODKEY|ShiftMask,		XK_Right,					shiftview,		{.i = +1 } },
+	{ MODKEY|ShiftMask,		XK_Left,					shiftview,		{.i = -1 } },
 	{ MODKEY,               XK_Return,					zoom,           {0} },
 	{ MODKEY,               XK_Tab,						view,           {0} },
 	{ MODKEY,				XK_q,						killclient,     {0} },
@@ -143,7 +151,6 @@ static Key keys[] = {
 	{ MODKEY,               XK_f,						setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,               XK_m,						setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,               XK_space,					setlayout,      {0} },
-	{ MODKEY|ShiftMask,     XK_space,					togglefloating, {0} },
 	{ MODKEY,               XK_0,						view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,     XK_0,						tag,            {.ui = ~0 } },
 	{ MODKEY,               XK_comma,					focusmon,       {.i = -1 } },
@@ -159,7 +166,7 @@ static Key keys[] = {
 	TAGKEYS(                XK_7,                      	6)
 	TAGKEYS(                XK_8,                      	7)
 	TAGKEYS(                XK_9,                      	8)
-	{ MODKEY|ShiftMask,     XK_q,						quit,           {0} },
+//	{ MODKEY|ShiftMask,     XK_q,						quit,           {0} },
 };
 
 
@@ -189,15 +196,21 @@ static Button buttons[] = {
  */
 void
 shiftview(const Arg *arg) {
-	Arg shifted;
+	int i, curtags;
+	int seltag = 0;
+	Arg a;
 
-	if(arg->i > 0) // left circular shift
-		shifted.ui = (selmon->tagset[selmon->seltags] << arg->i)
-		   | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - arg->i));
+	curtags = selmon->tagset[selmon->seltags];
+	for(i = 0; i < LENGTH(tags); i++)
+		if(curtags & (1 << i)){
+			seltag = i;
+			break;
+		}
 
-	else // right circular shift
-		shifted.ui = selmon->tagset[selmon->seltags] >> (- arg->i)
-		   | selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
+	seltag = (seltag + arg->i) % (int)LENGTH(tags);
+	if(seltag < 0)
+		seltag += LENGTH(tags);
 
-	view(&shifted);
+	a.i = (1 << seltag);
+	view(&a);
 }
