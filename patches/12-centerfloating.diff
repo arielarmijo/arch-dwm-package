@@ -1,0 +1,30 @@
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2020-04-01 12:44:32.762102801 -0300
++++ b/config.def.h	2020-04-01 12:45:18.915437172 -0300
+@@ -36,6 +36,7 @@ static const Rule rules[] = {
+ 	/* class      instance    title       tags mask     isfloating   monitor */
+ 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+ 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
++	{ "Pavucontrol",		NULL,			NULL,				0,				1,           -1 },
+ };
+ 
+ /* layout(s) */
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2020-04-01 12:44:32.765436135 -0300
++++ b/dwm.c	2020-04-01 12:45:18.918770506 -0300
+@@ -1312,6 +1312,15 @@ manage(Window w, XWindowAttributes *wa)
+ 		c->isfloating = c->oldstate = trans != None || c->isfixed;
+ 	if (c->isfloating)
+ 		XRaiseWindow(dpy, c->win);
++	if (c->isfloating && c->x == 0 && c->y == (c->mon->showbar ? bh : 0)) {
++		if (t) {
++			c->x = t->x + WIDTH(t) / 2 - WIDTH(c) / 2;
++			c->y = t->y + HEIGHT(t) / 2 - HEIGHT(c) / 2;
++		} else {
++			c->x = c->mon->mx + (c->mon->mw / 2 - WIDTH(c) / 2);
++			c->y = c->mon->my + (c->mon->mh / 2 - HEIGHT(c) / 2);
++		}
++	}
+ 	if( attachbelow )
+ 		attachBelow(c);
+ 	else

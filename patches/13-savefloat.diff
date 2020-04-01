@@ -1,16 +1,15 @@
-diff --git i/dwm.c w/dwm.c
-index 4465af1..96b0b26 100644
---- i/dwm.c
-+++ w/dwm.c
-@@ -88,6 +88,7 @@ struct Client {
- 	char name[256];
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2020-04-01 12:45:54.215437960 -0300
++++ b/dwm.c	2020-04-01 12:46:36.268772251 -0300
+@@ -113,6 +113,7 @@ struct Client {
  	float mina, maxa;
+ 	float cfact;
  	int x, y, w, h;
 +	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
  	int oldx, oldy, oldw, oldh;
  	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
  	int bw, oldbw;
-@@ -1056,6 +1057,10 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1306,6 +1307,10 @@ manage(Window w, XWindowAttributes *wa)
  	updatewindowtype(c);
  	updatesizehints(c);
  	updatewmhints(c);
@@ -21,7 +20,7 @@ index 4465af1..96b0b26 100644
  	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
  	grabbuttons(c, 0);
  	if (!c->isfloating)
-@@ -1714,8 +1719,16 @@ togglefloating(const Arg *arg)
+@@ -2141,8 +2146,16 @@ togglefloating(const Arg *arg)
  		return;
  	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
  	if (selmon->sel->isfloating)

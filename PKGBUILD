@@ -1,8 +1,3 @@
-# $Id$
-# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: Dag Odenhall <dag.odenhall@gmail.com>
-# Contributor: Grigorios Bouzakis <grbzks@gmail.com>
-
 pkgname=dwm
 pkgver=6.2
 pkgrel=1
@@ -10,19 +5,18 @@ pkgdesc="A dynamic window manager for X"
 url="http://dwm.suckless.org"
 arch=('x86_64')
 license=('MIT')
-options=(zipman)
 depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode')
-source=(config.h
-		http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+provides=('dwm')
+conflicts=('dwm')
+source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+		config.h
 		dwm.desktop
-		dwm-patches.diff
-)
+		dwm-patches.diff)
 
-sha256sums=(SKIP
-			97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e
-			28c8d5bcaca83b7e945d6f52e91d3941f6d67e489d8a8484cc20546a8149bbf4
+sha256sums=(97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e
 			SKIP
-)
+			SKIP
+			SKIP)
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"

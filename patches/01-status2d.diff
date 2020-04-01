@@ -1,8 +1,55 @@
-diff --git a/dwm.c b/dwm.c
-index d27cb67..464c9d6 100644
---- a/dwm.c
-+++ b/dwm.c
-@@ -163,6 +163,7 @@ static void detach(Client *c);
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2019-02-02 09:55:28.000000000 -0300
++++ b/config.def.h	2020-03-31 20:12:41.922845741 -0300
+@@ -44,7 +44,7 @@ static const Layout layouts[] = {
+ };
+ 
+ /* key definitions */
+-#define MODKEY Mod1Mask
++#define MODKEY Mod4Mask
+ #define TAGKEYS(KEY,TAG) \
+ 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+ 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+@@ -57,7 +57,7 @@ static const Layout layouts[] = {
+ /* commands */
+ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+-static const char *termcmd[]  = { "st", NULL };
++static const char *termcmd[]  = { "urxvt", NULL };
+ 
+ static Key keys[] = {
+ 	/* modifier                     key        function        argument */
+@@ -72,7 +72,7 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+ 	{ MODKEY,                       XK_Return, zoom,           {0} },
+ 	{ MODKEY,                       XK_Tab,    view,           {0} },
+-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
++	{ MODKEY,		                XK_q,      killclient,     {0} },
+ 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+ 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+diff -up a/config.mk b/config.mk
+--- a/config.mk	2019-02-02 09:55:28.000000000 -0300
++++ b/config.mk	2020-03-31 20:11:31.822844156 -0300
+@@ -4,11 +4,11 @@ VERSION = 6.2
+ # Customize below to fit your system
+ 
+ # paths
+-PREFIX = /usr/local
++PREFIX = /usr
+ MANPREFIX = ${PREFIX}/share/man
+ 
+-X11INC = /usr/X11R6/include
+-X11LIB = /usr/X11R6/lib
++X11INC = /usr/include/X11
++X11LIB = /usr/lib/X11
+ 
+ # Xinerama, comment if you don't want it
+ XINERAMALIBS  = -lXinerama
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2019-02-02 09:55:28.000000000 -0300
++++ b/dwm.c	2020-03-31 20:11:31.826177489 -0300
+@@ -163,6 +163,7 @@ static void detachstack(Client *c);
  static Monitor *dirtomon(int dir);
  static void drawbar(Monitor *m);
  static void drawbars(void);
@@ -10,7 +57,7 @@ index d27cb67..464c9d6 100644
  static void enternotify(XEvent *e);
  static void expose(XEvent *e);
  static void focus(Client *c);
-@@ -237,7 +238,7 @@ static void zoom(const Arg *arg);
+@@ -236,7 +237,7 @@ static void zoom(const Arg *arg);
  
  /* variables */
  static const char broken[] = "broken";
@@ -19,7 +66,7 @@ index d27cb67..464c9d6 100644
  static int screen;
  static int sw, sh;           /* X display screen geometry width, height */
  static int bh, blw = 0;      /* bar geometry */
-@@ -483,7 +484,7 @@ cleanup(void)
+@@ -484,7 +485,7 @@ cleanup(void)
  		cleanupmon(mons);
  	for (i = 0; i < CurLast; i++)
  		drw_cur_free(drw, cursor[i]);
@@ -28,8 +75,19 @@ index d27cb67..464c9d6 100644
  		free(scheme[i]);
  	XDestroyWindow(dpy, wmcheckwin);
  	drw_free(drw);
-@@ -690,6 +691,114 @@ dirtomon(int dir)
- 	return m;
+@@ -703,9 +704,7 @@ drawbar(Monitor *m)
+ 
+ 	/* draw status first so it can be overdrawn by tags later */
+ 	if (m == selmon) { /* status is only drawn on selected monitor */
+-		drw_setscheme(drw, scheme[SchemeNorm]);
+-		sw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
+-		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
++		sw = m->ww - drawstatusbar(m, bh, stext);
+ 	}
+ 
+ 	for (c = m->clients; c; c = c->next) {
+@@ -751,6 +750,114 @@ drawbars(void)
+ 		drawbar(m);
  }
  
 +int
@@ -141,20 +199,9 @@ index d27cb67..464c9d6 100644
 +}
 +
  void
- drawbar(Monitor *m)
+ enternotify(XEvent *e)
  {
-@@ -701,9 +802,7 @@ drawbar(Monitor *m)
- 
- 	/* draw status first so it can be overdrawn by tags later */
- 	if (m == selmon) { /* status is only drawn on selected monitor */
--		drw_setscheme(drw, scheme[SchemeNorm]);
--		sw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
--		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
-+		sw = m->ww - drawstatusbar(m, bh, stext);
- 	}
- 
- 	for (c = m->clients; c; c = c->next) {
-@@ -1572,7 +1671,8 @@ setup(void)
+@@ -1567,7 +1674,8 @@ setup(void)
  	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
  	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
  	/* init appearance */

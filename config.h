@@ -84,17 +84,20 @@ static void shiftview(const Arg *arg);
 /* commands */
 static char dmenumon[2]				= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]		= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]		= { "urxvtc", NULL };
+static const char *termcmd[]		= { "urxvt", NULL };
+static const char *termcmdtabbed[]	= { "tabbed", "-c", "urxvt", "-embed", NULL };
 static const char scratchpadname[]	= "scratchpad";
-static const char *scratchpadcmd[]	= { "urxvtc", "-name", scratchpadname, "-g", "82x22+1094+19", NULL };
+static const char *scratchpadcmd[]	= { "urxvt", "-name", scratchpadname, "-g", "82x22+1094+19", NULL };
+static const char *xkillcmd[]		= { "xkill", NULL };
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
-	/* modifier             key					function        argument */
+	/* modifier             key							function        argument */
 	{ MODKEY,				XK_o,						spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,		XK_o,						togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY|ShiftMask,		XK_Return,					spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,		XK_x,						spawn,			SHCMD("/usr/bin/xkill") },
+	{ Mod1Mask|ShiftMask,	XK_Return,					spawn,          {.v = termcmdtabbed } },
+	{ MODKEY|ShiftMask,		XK_x,						spawn,			{.v = xkillcmd } },
 	{ MODKEY,				XK_e,						spawn,			SHCMD("~/.local/bin/dmenu_exit") },
 	{ MODKEY,				XK_p,						spawn,			SHCMD("~/.local/bin/dmenu_display") },
 	{ MODKEY|ShiftMask,		XK_q,						spawn,			SHCMD("~/.local/bin/key-bindings session-kill") },
@@ -119,27 +122,25 @@ static Key keys[] = {
 	{ MODKEY,				XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings toggle-autolock") },
 	{ MODKEY|ShiftMask,		XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-off") },
 	{ MODKEY|ControlMask,	XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-lock") },
-	{ Mod1Mask,				XK_space,					spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toogle") },
+	{ Mod1Mask,				XK_space,					spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toggle") },
 	{ 0,					XF86XK_TouchpadToggle,		spawn,			SHCMD("~/.local/bin/key-bindings toggle-touchpad") },
 	{ MODKEY,				XK_b,						togglebar,      {0} },
-	{ MODKEY|ShiftMask,     XK_space,					togglefloating, {0} },
+	{ MODKEY|ShiftMask,     XK_space,					togglefloating, {0} }, 
 	{ MODKEY,               XK_s,					    togglesticky,   {0} },
 	{ MODKEY|ShiftMask,     XK_f,						togglefullscr,  {0} },
-	{ MODKEY,               XK_j,						focusstack,     {.i = +1 } },
-	{ MODKEY,               XK_k,						focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_j,						focusstack,     {.i = INC(+1) } },
+	{ MODKEY,               XK_k,						focusstack,     {.i = INC(-1) } },
+	{ MODKEY|ShiftMask,     XK_j,						pushstack,      {.i = INC(+1) } },
+	{ MODKEY|ShiftMask,     XK_k,						pushstack,      {.i = INC(-1) } },
 	{ MODKEY,               XK_i,						incnmaster,     {.i = +1 } },
-	{ MODKEY,               XK_d,						incnmaster,     {.i = -1 } },
 	{ MODKEY,               XK_h,						setmfact,       {.f = -0.05} },
 	{ MODKEY,               XK_l,						setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,     XK_h,					    setcfact,       {.f = +0.25} },
 	{ MODKEY|ShiftMask,     XK_l,						setcfact,       {.f = -0.25} },
-	{ MODKEY|Mod1Mask,		XK_o,					    setcfact,       {.f =  0.00} },
-	{ MODKEY|ShiftMask,     XK_j,						movestack,      {.i = +1 } },
-	{ MODKEY|ShiftMask,     XK_k,						movestack,      {.i = -1 } },
-	{ MODKEY,				XK_Up,						focusstack,		{.i = -1 } },
-	{ MODKEY|ShiftMask,     XK_Up,						movestack,      {.i = -1 } },
-	{ MODKEY,				XK_Down,					focusstack,		{.i = +1 } },
-	{ MODKEY|ShiftMask,     XK_Down,					movestack,      {.i = +1 } },
+	{ MODKEY,				XK_Up,						focusstack,		{.i = INC(-1) } },
+	{ MODKEY|ShiftMask,     XK_Up,						pushstack,      {.i = INC(-1) } },
+	{ MODKEY,				XK_Down,					focusstack,		{.i = INC(+1) } },
+	{ MODKEY|ShiftMask,     XK_Down,					pushstack,      {.i = INC(+1) } },
 	{ MODKEY,				XK_Left,					setmfact,		{.f = -0.05} },
 	{ MODKEY,				XK_Right,					setmfact,		{.f = +0.05} },
 	{ MODKEY|ShiftMask,		XK_Right,					shiftview,		{.i = +1 } },
@@ -166,7 +167,7 @@ static Key keys[] = {
 	TAGKEYS(                XK_7,                      	6)
 	TAGKEYS(                XK_8,                      	7)
 	TAGKEYS(                XK_9,                      	8)
-//	{ MODKEY|ShiftMask,     XK_q,						quit,           {0} },
+	{ Mod1Mask|ShiftMask,   XK_q,						quit,           {0} },
 };
 
 
@@ -176,19 +177,33 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
+	{ ClkWinTitle,          0,	  	        Button4,        focusstack,		{ .i = INC(-1) } },
+	{ ClkWinTitle,          0,			    Button5,        focusstack,		{ .i = INC(+1) } },
+	{ ClkWinTitle,          MODKEY,		    Button4,        pushstack,		{ .i = INC(-1) } },
+	{ ClkWinTitle,          MODKEY,		    Button5,        pushstack,		{ .i = INC(+1) } },
+
 	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("~/.local/bin/key-bindings open gsimplecal") },
+
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,	{0} },
+
+	{ ClkRootWin,           0,              Button2,        spawn,          { .v = termcmd } },
+
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+	{ ClkTagBar,            0,              Button4,        shiftview,	    { .i = +1 } },
+	{ ClkTagBar,            0,              Button5,        shiftview,      { .i = -1 } },
 };
 
 
 /* custom functions */
+
 /** Function to shift the current view to the left/right
  *
  * @param: "arg->i" stores the number of tags to shift right (positive value)
@@ -196,21 +211,15 @@ static Button buttons[] = {
  */
 void
 shiftview(const Arg *arg) {
-	int i, curtags;
-	int seltag = 0;
-	Arg a;
+	Arg shifted;
 
-	curtags = selmon->tagset[selmon->seltags];
-	for(i = 0; i < LENGTH(tags); i++)
-		if(curtags & (1 << i)){
-			seltag = i;
-			break;
-		}
+	if(arg->i > 0) // left circular shift
+		shifted.ui = (selmon->tagset[selmon->seltags] << arg->i)
+		   | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - arg->i));
 
-	seltag = (seltag + arg->i) % (int)LENGTH(tags);
-	if(seltag < 0)
-		seltag += LENGTH(tags);
+	else // right circular shift
+		shifted.ui = selmon->tagset[selmon->seltags] >> (- arg->i)
+		   | selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
 
-	a.i = (1 << seltag);
-	view(&a);
+	view(&shifted);
 }

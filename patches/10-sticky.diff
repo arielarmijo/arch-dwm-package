@@ -1,8 +1,7 @@
-diff --git a/config.def.h b/config.def.h
-index 7054c06..9b5d5b8 100644
---- a/config.def.h
-+++ b/config.def.h
-@@ -76,6 +76,7 @@ static Key keys[] = {
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2020-04-01 12:37:22.475426473 -0300
++++ b/config.def.h	2020-04-01 12:41:54.532099249 -0300
+@@ -97,6 +97,7 @@ static Key keys[] = {
  	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },
  	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -10,20 +9,19 @@ index 7054c06..9b5d5b8 100644
  	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
  	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
  	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-diff --git a/dwm.c b/dwm.c
-index 0362114..0ef5c7f 100644
---- a/dwm.c
-+++ b/dwm.c
-@@ -49,7 +49,7 @@
- #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2020-04-01 12:41:28.105431988 -0300
++++ b/dwm.c	2020-04-01 12:42:52.235433876 -0300
+@@ -52,7 +52,7 @@
  #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                 * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+ #define ISINC(X)                ((X) > 1000 && (X) < 3000)
 -#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
 +#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]) || C->issticky)
  #define LENGTH(X)               (sizeof X / sizeof X[0])
+ #define MOD(N,M)                ((N)%(M) < 0 ? (N)%(M) + (M) : (N)%(M))
  #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
- #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
-@@ -92,7 +92,7 @@ struct Client {
+@@ -117,7 +117,7 @@ struct Client {
  	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
  	int bw, oldbw;
  	unsigned int tags;
@@ -32,7 +30,7 @@ index 0362114..0ef5c7f 100644
  	Client *next;
  	Client *snext;
  	Monitor *mon;
-@@ -211,6 +211,7 @@ static void tagmon(const Arg *arg);
+@@ -253,6 +253,7 @@ static void tagmon(const Arg *arg);
  static void tile(Monitor *);
  static void togglebar(const Arg *arg);
  static void togglefloating(const Arg *arg);
@@ -40,10 +38,11 @@ index 0362114..0ef5c7f 100644
  static void toggletag(const Arg *arg);
  static void toggleview(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
-@@ -1713,6 +1714,15 @@ togglefloating(const Arg *arg)
+@@ -2135,6 +2136,15 @@ togglefloating(const Arg *arg)
+ 	arrange(selmon);
  }
  
- void
++void
 +togglesticky(const Arg *arg)
 +{
 +	if (!selmon->sel)
@@ -52,7 +51,6 @@ index 0362114..0ef5c7f 100644
 +	arrange(selmon);
 +}
 +
-+void
+ void
  toggletag(const Arg *arg)
  {
- 	unsigned int newtags;

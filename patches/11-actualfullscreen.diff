@@ -1,0 +1,36 @@
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2020-04-01 12:43:25.158767952 -0300
++++ b/config.def.h	2020-04-01 12:43:54.415435271 -0300
+@@ -97,6 +97,7 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
++	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+ 	{ MODKEY,                       XK_s,      togglesticky,   {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+ 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2020-04-01 12:43:25.158767952 -0300
++++ b/dwm.c	2020-04-01 12:43:54.415435271 -0300
+@@ -253,6 +253,7 @@ static void tagmon(const Arg *arg);
+ static void tile(Monitor *);
+ static void togglebar(const Arg *arg);
+ static void togglefloating(const Arg *arg);
++static void togglefullscr(const Arg *arg);
+ static void togglesticky(const Arg *arg);
+ static void toggletag(const Arg *arg);
+ static void toggleview(const Arg *arg);
+@@ -2146,6 +2147,13 @@ togglesticky(const Arg *arg)
+ }
+ 
+ void
++togglefullscr(const Arg *arg)
++{
++  if(selmon->sel)
++    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
++}
++
++void
+ toggletag(const Arg *arg)
+ {
+ 	unsigned int newtags;

@@ -16,7 +16,7 @@ makepkg -sci
 - [attachbelow](https://dwm.suckless.org/patches/attachbelow/)
 - [center floating windows](https://github.com/ericpruitt/edge/blob/master/patches/dwm-10-center-floating-windows.diff)
 - [cfacts](https://dwm.suckless.org/patches/cfacts/)
-- [movestack](https://dwm.suckless.org/patches/movestack/)
+- [stacker](https://dwm.suckless.org/patches/stacker/)
 - [pertag](https://dwm.suckless.org/patches/pertag/)
 - [resizecornes](https://dwm.suckless.org/patches/resizecorners/)
 - [save floats](https://dwm.suckless.org/patches/save_floats/)

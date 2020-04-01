@@ -1,10 +1,9 @@
-diff --git a/dwm.c b/dwm.c
-index 1bbb4b3..c4e2f0c 100644
---- a/dwm.c
-+++ b/dwm.c
-@@ -1663,6 +1663,27 @@ toggletag(const Arg *arg) {
- void
- toggleview(const Arg *arg) {
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2020-04-01 12:37:22.475426473 -0300
++++ b/dwm.c	2020-04-01 12:40:44.708764351 -0300
+@@ -2154,6 +2154,27 @@ void
+ toggleview(const Arg *arg)
+ {
  	unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
 +	Client *const selected = selmon->sel;
 +
@@ -28,5 +27,5 @@ index 1bbb4b3..c4e2f0c 100644
 +	// we also want to be sure not to mutate the focus
 +	focus(selected);
  
- 	if(newtagset) {
+ 	if (newtagset) {
  		selmon->tagset[selmon->seltags] = newtagset;
