@@ -16,15 +16,6 @@ diff -up a/config.def.h b/config.def.h
  	{ MODKEY,                       XK_b,      togglebar,      {0} },
  	STACKKEYS(MODKEY,                          focus)
  	STACKKEYS(MODKEY|ShiftMask,                push)
-@@ -89,7 +92,7 @@ static Key keys[] = {
- 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
- 	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
- 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
--	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
-+	{ Mod1Mask|ShiftMask,           XK_o,      setcfact,       {.f =  0.00} },
- 	{ MODKEY,                       XK_Return, zoom,           {0} },
- 	{ MODKEY,                       XK_Tab,    view,           {0} },
- 	{ MODKEY,		                XK_q,      killclient,     {0} },
 diff -up a/dwm.c b/dwm.c
 --- a/dwm.c	2020-04-01 12:47:03.488772865 -0300
 +++ b/dwm.c	2020-04-01 12:47:28.322106759 -0300

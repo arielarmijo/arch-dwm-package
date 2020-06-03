@@ -51,12 +51,12 @@ static const Rule rules[] = {
 	{ "Xsane",				NULL,			NULL,				0,				1,           -1 },
 };
 
+
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int attachbelow = 1;    /* 1 means attach after the currently active window */
-
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
@@ -81,6 +81,7 @@ static const Layout layouts[] = {
 /* custom functions declarations */
 static void shiftview(const Arg *arg);
 
+
 /* commands */
 static char dmenumon[2]				= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]		= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
@@ -93,17 +94,21 @@ static const char *xkillcmd[]		= { "xkill", NULL };
 #include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier             key							function        argument */
-	{ MODKEY,				XK_o,						spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,		XK_o,						togglescratch,  {.v = scratchpadcmd } },
-	{ MODKEY|ShiftMask,		XK_Return,					spawn,          {.v = termcmd } },
-	{ Mod1Mask|ShiftMask,	XK_Return,					spawn,          {.v = termcmdtabbed } },
+	{ Mod1Mask,				XK_o,						spawn,          {.v = dmenucmd } },
+	{ Mod1Mask|ShiftMask,	XK_o,						togglescratch,  {.v = scratchpadcmd } },
+	{ Mod1Mask|ShiftMask,	XK_Return,					spawn,          {.v = termcmd } },
+	{ Mod1Mask|ControlMask,	XK_Return,					spawn,          {.v = termcmdtabbed } },
 	{ MODKEY|ShiftMask,		XK_x,						spawn,			{.v = xkillcmd } },
-	{ MODKEY,				XK_e,						spawn,			SHCMD("~/.local/bin/dmenu_exit") },
-	{ MODKEY,				XK_p,						spawn,			SHCMD("~/.local/bin/dmenu_display") },
-	{ MODKEY|ShiftMask,		XK_q,						spawn,			SHCMD("~/.local/bin/key-bindings session-kill") },
-	{ MODKEY|ShiftMask,		XK_p,						spawn,			SHCMD("~/.local/bin/key-bindings open pcmanfm") },
-	{ MODKEY|ShiftMask,		XK_r,						spawn,			SHCMD("~/.local/bin/key-bindings open ranger") },
-	{ MODKEY|ShiftMask,		XK_c,						spawn,			SHCMD("~/.local/bin/key-bindings open chromium") },
+	{ Mod1Mask,				XK_e,						spawn,			SHCMD("~/.local/bin/dmenu_exit") },
+	{ Mod1Mask,				XK_p,						spawn,			SHCMD("~/.local/bin/dmenu_display") },
+	{ Mod1Mask|ShiftMask,	XK_p,						spawn,			SHCMD("~/.local/bin/key-bindings open pcmanfm") },
+	{ Mod1Mask,				XK_u,						spawn,			SHCMD("~/.local/bin/dmenu_mount") },
+	{ Mod1Mask|ShiftMask,	XK_u,						spawn,			SHCMD("~/.local/bin/dmenu_unmount") },
+	{ Mod1Mask,				XK_q,						killclient,     {0} },
+	{ Mod1Mask|ShiftMask,	XK_q,						spawn,			SHCMD("~/.local/bin/key-bindings session-kill") },
+	{ Mod1Mask|ControlMask, XK_q,						quit,           {0} },
+	{ Mod1Mask|ShiftMask,	XK_r,						spawn,			SHCMD("~/.local/bin/key-bindings open ranger") },
+	{ Mod1Mask|ShiftMask,	XK_c,						spawn,			SHCMD("~/.local/bin/key-bindings open chromium") },
 	{ 0,					XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot") },
 	{ ShiftMask,			XK_Print,					spawn,			SHCMD("~/.local/bin/key-bindings screen-shot-focused") },
 	{ 0,					XK_Caps_Lock,				spawn,			SHCMD("~/.local/bin/key-bindings caps-lock") },
@@ -111,47 +116,47 @@ static Key keys[] = {
 	{ 0,					XF86XK_AudioPause,			spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
 	{ 0,					XF86XK_AudioPrev,			spawn,			SHCMD("~/.local/bin/key-bindings player-previous") },
 	{ 0,					XF86XK_AudioNext,			spawn,			SHCMD("~/.local/bin/key-bindings player-next") },
-	{ MODKEY,				XK_F1,						spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
-	{ MODKEY,				XK_F2,						spawn,			SHCMD("~/.local/bin/key-bindings player-previous") },
-	{ MODKEY,				XK_F3,						spawn,			SHCMD("~/.local/bin/key-bindings player-next") },
+	{ Mod1Mask,				XK_F1,						spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
+	{ Mod1Mask,				XK_F2,						spawn,			SHCMD("~/.local/bin/key-bindings player-previous") },
+	{ Mod1Mask,				XK_F3,						spawn,			SHCMD("~/.local/bin/key-bindings player-next") },
 	{ 0,					XF86XK_AudioMute,			spawn,			SHCMD("~/.local/bin/key-bindings volume-mute") },
 	{ 0,					XF86XK_AudioLowerVolume,	spawn,			SHCMD("~/.local/bin/key-bindings volume-down") },
 	{ 0,					XF86XK_AudioRaiseVolume,	spawn,			SHCMD("~/.local/bin/key-bindings volume-up") },
 	{ 0,					XF86XK_MonBrightnessUp,		spawn,			SHCMD("~/.local/bin/key-bindings backlight-up") },
 	{ 0,					XF86XK_MonBrightnessDown,	spawn,			SHCMD("~/.local/bin/key-bindings backlight-down") },
-	{ MODKEY,				XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings toggle-autolock") },
-	{ MODKEY|ShiftMask,		XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-off") },
-	{ MODKEY|ControlMask,	XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-lock") },
-	{ Mod1Mask,				XK_space,					spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toggle") },
+	{ Mod1Mask,				XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings toggle-autolock") },
+	{ Mod1Mask|ShiftMask,	XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-off") },
+	{ Mod1Mask|ControlMask,	XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-lock") },
 	{ 0,					XF86XK_TouchpadToggle,		spawn,			SHCMD("~/.local/bin/key-bindings toggle-touchpad") },
-	{ MODKEY,				XK_b,						togglebar,      {0} },
+	{ Mod1Mask,				XK_space,					spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toggle") },
 	{ MODKEY|ShiftMask,     XK_space,					togglefloating, {0} }, 
+	{ MODKEY,               XK_space,					setlayout,      {0} },
+	{ MODKEY,				XK_b,						togglebar,      {0} },
 	{ MODKEY,               XK_s,					    togglesticky,   {0} },
 	{ MODKEY|ShiftMask,     XK_f,						togglefullscr,  {0} },
 	{ MODKEY,               XK_j,						focusstack,     {.i = INC(+1) } },
-	{ MODKEY,               XK_k,						focusstack,     {.i = INC(-1) } },
 	{ MODKEY|ShiftMask,     XK_j,						pushstack,      {.i = INC(+1) } },
+	{ MODKEY,               XK_k,						focusstack,     {.i = INC(-1) } },
 	{ MODKEY|ShiftMask,     XK_k,						pushstack,      {.i = INC(-1) } },
 	{ MODKEY,               XK_i,						incnmaster,     {.i = +1 } },
+	{ MODKEY,               XK_d,						incnmaster,     {.i = -1 } },
 	{ MODKEY,               XK_h,						setmfact,       {.f = -0.05} },
-	{ MODKEY,               XK_l,						setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,     XK_h,					    setcfact,       {.f = +0.25} },
+	{ MODKEY,               XK_l,						setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,     XK_l,						setcfact,       {.f = -0.25} },
 	{ MODKEY,				XK_Up,						focusstack,		{.i = INC(-1) } },
 	{ MODKEY|ShiftMask,     XK_Up,						pushstack,      {.i = INC(-1) } },
 	{ MODKEY,				XK_Down,					focusstack,		{.i = INC(+1) } },
 	{ MODKEY|ShiftMask,     XK_Down,					pushstack,      {.i = INC(+1) } },
 	{ MODKEY,				XK_Left,					setmfact,		{.f = -0.05} },
+	{ MODKEY|ShiftMask,		XK_Left,					shiftview,		{.i = -1 } },
 	{ MODKEY,				XK_Right,					setmfact,		{.f = +0.05} },
 	{ MODKEY|ShiftMask,		XK_Right,					shiftview,		{.i = +1 } },
-	{ MODKEY|ShiftMask,		XK_Left,					shiftview,		{.i = -1 } },
 	{ MODKEY,               XK_Return,					zoom,           {0} },
 	{ MODKEY,               XK_Tab,						view,           {0} },
-	{ MODKEY,				XK_q,						killclient,     {0} },
 	{ MODKEY,               XK_t,						setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,               XK_f,						setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,               XK_m,						setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,               XK_space,					setlayout,      {0} },
 	{ MODKEY,               XK_0,						view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,     XK_0,						tag,            {.ui = ~0 } },
 	{ MODKEY,               XK_comma,					focusmon,       {.i = -1 } },
@@ -167,7 +172,6 @@ static Key keys[] = {
 	TAGKEYS(                XK_7,                      	6)
 	TAGKEYS(                XK_8,                      	7)
 	TAGKEYS(                XK_9,                      	8)
-	{ Mod1Mask|ShiftMask,   XK_q,						quit,           {0} },
 };
 
 
@@ -182,21 +186,20 @@ static Button buttons[] = {
 	{ ClkWinTitle,          0,	  	        Button4,        focusstack,		{ .i = INC(-1) } },
 	{ ClkWinTitle,          0,			    Button5,        focusstack,		{ .i = INC(+1) } },
 	{ ClkWinTitle,          MODKEY,		    Button4,        pushstack,		{ .i = INC(-1) } },
-	{ ClkWinTitle,          MODKEY,		    Button5,        pushstack,		{ .i = INC(+1) } },
+	{ ClkWinTitle,         	MODKEY,			Button5,        pushstack,		{ .i = INC(+1) } },
 
 	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("~/.local/bin/key-bindings open gsimplecal") },
 
-	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
-	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,	{0} },
+	{ ClkClientWin,         MODKEY,			Button1,        movemouse,      {0} },
+	{ ClkClientWin,         MODKEY,			Button2,        togglefloating, {0} },
+	{ ClkClientWin,         MODKEY,			Button3,        resizemouse,	{0} },
 
 	{ ClkRootWin,           0,              Button2,        spawn,          { .v = termcmd } },
 
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
-	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+	{ ClkTagBar,            Mod4Mask,       Button1,        tag,            {0} },
+	{ ClkTagBar,            Mod4Mask,       Button3,        toggletag,      {0} },
 	{ ClkTagBar,            0,              Button4,        shiftview,	    { .i = +1 } },
 	{ ClkTagBar,            0,              Button5,        shiftview,      { .i = -1 } },
 };

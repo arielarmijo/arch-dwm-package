@@ -1,7 +1,7 @@
 diff -up a/config.def.h b/config.def.h
---- a/config.def.h	2020-04-01 12:43:25.158767952 -0300
-+++ b/config.def.h	2020-04-01 12:43:54.415435271 -0300
-@@ -97,6 +97,7 @@ static Key keys[] = {
+--- a/config.def.h	2020-04-01 13:00:47.902124746 -0300
++++ b/config.def.h	2020-04-01 13:00:12.712123948 -0300
+@@ -94,6 +94,7 @@ static Key keys[] = {
  	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },
  	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -10,8 +10,8 @@ diff -up a/config.def.h b/config.def.h
  	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
  	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 diff -up a/dwm.c b/dwm.c
---- a/dwm.c	2020-04-01 12:43:25.158767952 -0300
-+++ b/dwm.c	2020-04-01 12:43:54.415435271 -0300
+--- a/dwm.c	2020-04-01 13:00:47.902124746 -0300
++++ b/dwm.c	2020-04-01 13:00:12.715457281 -0300
 @@ -253,6 +253,7 @@ static void tagmon(const Arg *arg);
  static void tile(Monitor *);
  static void togglebar(const Arg *arg);

@@ -1,7 +1,7 @@
 diff -up a/config.def.h b/config.def.h
---- a/config.def.h	2020-04-01 12:37:22.475426473 -0300
-+++ b/config.def.h	2020-04-01 12:41:54.532099249 -0300
-@@ -97,6 +97,7 @@ static Key keys[] = {
+--- a/config.def.h	2020-04-01 12:58:46.722122015 -0300
++++ b/config.def.h	2020-04-01 12:59:18.718789397 -0300
+@@ -94,6 +94,7 @@ static Key keys[] = {
  	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },
  	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -10,8 +10,8 @@ diff -up a/config.def.h b/config.def.h
  	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
  	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 diff -up a/dwm.c b/dwm.c
---- a/dwm.c	2020-04-01 12:41:28.105431988 -0300
-+++ b/dwm.c	2020-04-01 12:42:52.235433876 -0300
+--- a/dwm.c	2020-04-01 12:58:56.508788899 -0300
++++ b/dwm.c	2020-04-01 12:59:18.722122730 -0300
 @@ -52,7 +52,7 @@
  #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                 * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
