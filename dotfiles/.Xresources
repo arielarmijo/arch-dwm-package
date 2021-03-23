@@ -1,0 +1,77 @@
+! font options
+Xft.autohint:	0
+Xft.lcdfilter:	lcddefault
+Xft.hintstyle:	hintslight
+Xft.hinting: 	1
+Xft.antialias:  1
+Xft.rgba:		rgb
+
+! urxvt
+URxvt*termName:			rxvt-unicode
+URxvt*buffered:			true
+URxvt*cursorBlink:		true
+URxvt*underlineColor:	blue
+URxvt*font:				xft:DejaVuSansMono Nerd Font:size=13
+URxvt*boldFont:			xft:DejaVuSansMono Nerd Font:bold:size=13 
+URxvt*depth:			32
+URxvt*background:		rgba:0000/0043/0054/c800
+URxvt*borderless:		true
+URxvt*scrollBar:		false
+URxvt*loginShell:		true
+Urxvt*secondaryScroll: 	true
+URxvt*saveLines:		2000
+URxvt*visualBell:		false
+URxvt*scrollTtyOutput:  false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress:true
+
+URxvt.perl-ext-common:	default,matcher,resize-font,vtwheel,bell-command
+URxvt.url-launcher:		/usr/bin/xdg-open 
+URxvt.matcher.button:	1
+URxvt.bell-command:		canberra-gtk-play -i bell	
+URxvt.iso14755:			false
+URxvt.iso14755_52:		false
+
+! special
+*.foreground:   #d7d0c7
+*.background:   #151515
+*.cursorColor:  #d7d0c7
+
+! black
+*.color0:       #090d21
+*.color8:       #dedede
+
+! red
+*.color1:       #4d99de
+*.color9:       #4d99de
+
+! green
+*.color2:       #4ddeda
+*.color10:      #4ddeda
+
+! yellow
+*.color3:       #de68af
+*.color11:      #de68af
+
+! blue
+*.color4:       #8861de
+*.color12:      #8861de
+
+! magenta
+*.color5:       #deda4d
+*.color13:      #deda4d
+
+! cyan
+*.color6:       #6175DD
+*.color14:      #6175DD
+
+! white
+*.color7:       #dedede
+*.color15:      #dedede
+
+
+
+
+
+
+

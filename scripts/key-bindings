@@ -9,7 +9,8 @@
 #   gnome-icon-theme
 #   feh
 #   i3lock
-
+#   xkblayout-state-git
+#   urxvt
 # Variables
 time=1000
 
@@ -17,13 +18,14 @@ time=1000
 case $1 in
 
 	caps-lock )
-		state="$(sleep 0.1; xset q | grep "Caps Lock" | awk -F" " '{print $4}')"
+		state="$(sleep 0.2; xset q | grep "Caps Lock" | awk -F" " '{print $4}')"
 		dunstify -t $time -r 100 -i dialog-information "Caps Lock $state"
 		canberra-gtk-play -i dialog-information
+	    kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
 		;;
     
 	num-lock )
-		state="$(sleep 0.1; xset q | grep "Num Lock" | awk -F" " '{print $8}')"
+		state="$(sleep 0.2; xset q | grep "Num Lock" | awk -F" " '{print $8}')"
 		dunstify -t $time -r 100 -i dialog-information "Num Lock $state"
 		canberra-gtk-play -i dialog-information
 		;;
@@ -64,26 +66,19 @@ case $1 in
 		;;
 
 	player-play )
-		if [ -n "$(pgrep cmus)" ]
+		playerctl play-pause
+		if [ $? -eq 1 ]
 		then
-			cmus-remote -u
-		else
-			urxvtc -name "cmus" -e "cmus"
+			urxvtc -name spcmus -e cmus
 		fi
 		;;
 	
 	player-previous )
-		if [ -n "$(pgrep cmus)" ]
-		then
-			cmus-remote -r
-		fi
+		playerctl previous
 		;;
 
 	player-next )
-		if [ -n "$(pgrep cmus)" ]
-		then
-			cmus-remote -n
-		fi
+		playerctl next
 		;;
 
 	screen-shot )
@@ -97,12 +92,12 @@ case $1 in
 		;;
 	
 	screen-off )
-		sleep 0.1 && xset dpms force off
+		sleep 0.5  && xset dpms force off
 		;;
 	
 	screen-lock )
 		image=$(cat ~/.fehbg | grep feh | awk '{print $4}' | sed 's/\x27//g')
-		i3lock -i $image
+		i3lock -nti $image
 		;;
     
 	toggle-autolock )
@@ -120,6 +115,13 @@ case $1 in
 		canberra-gtk-play -i dialog-information
 		;;
 	
+	keyboard-toggle )
+		layout="$(xkblayout-state print %c)"
+		layouts="$(xkblayout-state print %C)"
+		#xkblayout-state set $((($layout+1)%$layouts)) && kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
+		xkblayout-state set $((($layout+1)%$layouts)) && kill -SIGTERM $(pgrep -fxu $USER "sleep 5") 
+		;;
+
 	toggle-touchpad )
 		touchpad="ELAN1401:00 04F3:30F2 Touchpad"
 		isEnabled=$(xinput --list-props "$touchpad" | grep "Device Enabled" | awk '{print $NF}')
@@ -149,14 +151,11 @@ case $1 in
 		esac
 		;;
 
-	keyboard-toogle )
-		if [ "$(xkblayout-state print %s)" == "latam" ]; then
-			xkblayout-state set 1 && kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
-		else
-			xkblayout-state set 0 && kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
-		fi
+	restart-volumeicon )
+		pid=$(pidof volumeicon)
+		[[ -n $pid ]] && kill $pid
+		volumeicon &
 		;;
-
 	* )
 		echo "Opción no reconocida."
 		;;

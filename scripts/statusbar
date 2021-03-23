@@ -7,26 +7,25 @@ boot_icon=""
 root_icon=""
 home_icon=""
 cpu_icon="﬙"
+ram_icon="菉"
 load_icon=""
 temp_icon=""
 cal_icon=""
 clock_icon=""
-#sep="〉"
-sep="| "
+sep=" | "
 
 # Date and time format
-date_format="%a %d %b %Y"
+date_format="%d^f3^%b^f3^%Y"
 time_format="%H:%M"
 
 # Thresholds
-disk_usage_max=90
+disk_usage_max=95
 cpu_usage_max=95
 cpu_load_max=4.00
 cpu_temp_max=75
 # https://batteryuniversity.com/learn/article/how_to_prolong_lithium_based_batteries
 bat_danger=20
-bat_warning_min=45
-bat_warning_max=75
+bat_warning=45
 
 # Colors
 red="^c#FF0000^"
@@ -38,19 +37,19 @@ gray="^c#bbbbbb^"
 ############################# Functions ########################################
 
 function kb_layout {
-#https://github.com/nonpop/xkblayout-state
-	layout="$(~/.local/bin/xkblayout-state print %c)"
-	case $layout in
-		0)
-			status+="lat "
-			;;
-		1)
-			status+="us "
-			;;
-		*)
-			echo $layout
-			;;
-	esac
+	#https://github.com/nonpop/xkblayout-state
+	layout="$(~/.local/bin/xkblayout-state print %s)"
+	variant="$(~/.local/bin/xkblayout-state print %v)"
+	mayus="$(xset q | awk '/Caps Lock/ {print $4}')"
+	if [ "$mayus" = "on" ]; then
+		layout="${layout^^}"
+		variant="${variant^^}"
+	fi
+	output="$layout"
+	if [ -n "$variant" ]; then
+		output+="^f4^$variant"
+	fi
+	echo "$output"
 }
 
 function disk_usage {
@@ -74,15 +73,13 @@ function disk_usage {
 	esac
 
 	if [ ${usage%?} -ge $disk_usage_max ]; then
-		status+="$red$icon $usage$gray "
+		printf "%s" "$red$icon^f4^$usage$gray"
 	else
-		status+="$icon $usage "
+		printf "%s" "$icon^f4^$usage"
 	fi
-
 }
 
 new=(0 0 0 0 0 0 0 0 0 0)
-
 function cpu_usage {
 	prev=("${new[@]}")
 	new=($(sed -n 's/^cpu\s\s//p' /proc/stat))
@@ -95,17 +92,17 @@ function cpu_usage {
 	total_idle=$(( (${new[3]}+${new[4]}) - (${prev[3]}+${prev[4]}) ))
 	total_usage=$(($total_time - $total_idle))
 	usage=$(($total_usage*100/$total_time))
-#	echo "$usage%"
+#	echo "cpu: $usage%"
 
 	if [ $usage -ge $cpu_usage_max ]; then
-		status+="$red$cpu_icon $usage%$gray "
+		status+="$red$cpu_icon^f4^$usage%$gray"
 	else
-		status+="$cpu_icon $usage% "
+		status+="$cpu_icon^f4^$usage%"
 	fi
-
 }
 
 function cpu_load {
+
 	load_1m="$(cat /proc/loadavg | awk '{print $1}')"
 	load_5m="$(cat /proc/loadavg | awk '{print $2}')"
 	load_15m="$(cat /proc/loadavg | awk '{print $3}')"
@@ -113,62 +110,73 @@ function cpu_load {
 	if (($(echo "$load_1m > $cpu_load_max" | bc -l))) || \
 	   (($(echo "$load_5m > $cpu_load_max" | bc -l))) || \
 	   (($(echo "$load_15m > $cpu_load_max" | bc -l))); then
-		status+="$red$load_icon $gray"
+		printf "%s" "$red$load_icon$gray^f6^"
 	else
-		status+="$load_icon "
+		printf "%s" "$load_icon^f6^"
 	fi
 	
 	if (( $(echo "$load_1m > $cpu_load_max" | bc -l) )); then
-		status+="$red$load_1m$gray "
+		printf "%s" "$red$load_1m$gray^f6^"
 	else
-		status+="$load_1m "
+		printf "%s" "$load_1m^f6^"
 	fi
 
 	if (( $(echo "$load_5m > $cpu_load_max" | bc -l) )); then
-		status+="$red$load_5m$gray "
+		printf "%s" "$red$load_5m$gray^f6^"
 	else
-		status+="$load_5m "
+		printf "%s" "$load_5m^f6^"
 	fi
 
 	if (( $(echo "$load_15m > $cpu_load_max" | bc -l) )); then
-		status+="$red$load_15m$gray "
+		printf "%s" "$red$load_15m$gray"
 	else
-		status+="$load_15m "
+		printf "%s" "$load_15m"
 	fi
 
 }
 
 function cpu_temp {
 	temp=$(cat /sys/class/hwmon/hwmon5/temp1_input | cut -b 1-2)
-
 	if [ $temp -ge $cpu_temp_max ]; then
-		status+="$red$temp_icon $temp°C$gray "
+		printf "%s°C" "$red$temp_icon^f4^$temp$gray"
 	else
-		status+="$temp_icon $temp°C "
+		printf "%s°C" "$temp_icon^f4^$temp"
 	fi
+}
 
+function ram_used() {
+	used=$(awk '$1=="MemTotal:" {total=$2}
+				$1=="MemFree:" {free=$2}
+				$1=="Buffers:" {buffers=$2}
+				$1=="Cached:" {cached=$2}
+				$1=="Shmem:" {shmem=$2}
+				$1=="SReclaimable:" {reclaimable=$2}
+				END {printf "%.0f%%", (total+shmem-free-buffers-cached-reclaimable)*100/total}' /proc/meminfo)
+	printf "%s" "$ram_icon^f4^$used"
 }
 
 function bat_status {
+
 	bat_capacity=$(cat /sys/class/power_supply/BAT0/capacity)
 	bat_status=$(cat /sys/class/power_supply/BAT0/status)
+	ac_status=$(cat /sys/class/power_supply/AC0/online)
 
 	if [ "$bat_status" = "Charging" ]; then
 		if (($bat_capacity < 15));then
 			bat_icon=""
-		elif (($bat_capacity >= 15 && $bat_capacity < 30));then
+		elif (($bat_capacity < 30));then
 			bat_icon=""
-		elif (($bat_capacity >= 30 && $bat_capacity < 45));then
+		elif (($bat_capacity < 45));then
 			bat_icon=""
-		elif (($bat_capacity >= 45 && $bat_capacity < 60));then
+		elif (($bat_capacity < 60));then
 			bat_icon=""
-		elif (($bat_capacity >= 60 && $bat_capacity < 75));then
+		elif (($bat_capacity < 75));then
 			bat_icon=""
-		elif (($bat_capacity >= 75 && $bat_capacity < 90));then
+		elif (($bat_capacity < 90));then
 			bat_icon=""
-		elif (($bat_capacity >= 90 && $bat_capacity < 98));then
+		elif (($bat_capacity < 98));then
 			bat_icon=""
-		elif (($bat_capacity >= 98));then
+		else
 			bat_icon=""
 		fi
 	elif [ "$bat_status" = "Not charging" ]; then
@@ -200,21 +208,18 @@ function bat_status {
 	fi
 
 	if (($bat_capacity <= $bat_danger)); then
-		status+="$red$bat_icon $bat_capacity%$gray "
-	elif (($bat_capacity > $bat_danger && $bat_capacity <= $bat_warning_min)); then
-		status+="$yellow$bat_icon $bat_capacity%$gray "
-	elif (($bat_capacity > $bat_warning_min && $bat_capacity < $bat_warning_max)); then
-		status+="$bat_icon $bat_capacity% "
-	elif (($bat_capacity >= $bat_warning_max)); then
-		status+="$yellow$bat_icon $bat_capacity%$gray "
+		printf "%s" "$red$bat_icon^f4^$bat_capacity%$gray"
+	elif (($bat_capacity <= $bat_warning)); then
+		printf "%s" "$yellow$bat_icon^f4^$bat_capacity%$gray"
+	else
+		printf "%s" "$bat_icon^f4^$bat_capacity%"
 	fi
-
 }
 
 function date_time {
 	date=$(date +"$date_format")
 	time=$(date +"$time_format")
-	status+="$cal_icon $date $clock_icon $time"
+	printf "%s" "$cal_icon^f5^$date $clock_icon^f5^$time"
 }
 
 
@@ -222,21 +227,27 @@ function date_time {
 
 while true; do
 	status=""
-	kb_layout
+	status+="$(kb_layout)"
 	status+="$sep"
-	disk_usage /efi
-	disk_usage /
-	disk_usage /home
+	status+="$(disk_usage /efi)"
+	status+="^f8^"
+	status+="$(disk_usage /)"
+	status+="^f8^"
+	status+="$(disk_usage /home)"
 	status+="$sep"
 	cpu_usage
-	cpu_load
-	cpu_temp
+	status+="^f8^"
+	status+="$(cpu_load)"
+	status+="^f8^"
+	status+="$(cpu_temp)"
 	status+="$sep"
-	bat_status
+	status+="$(ram_used)"
 	status+="$sep"
-	date_time
-	status+=" "
-#    echo -e "$status"
+	status+="$(bat_status)"
+	status+="$sep"
+	status+="$(date_time)"
+	status+="^f6^"
+	#echo -e "$status"
 	xsetroot -name "$status"
 	sleep 5
 done &

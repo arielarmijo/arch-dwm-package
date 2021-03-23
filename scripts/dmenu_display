@@ -1,49 +1,45 @@
 #!/bin/bash
-
-internal="eDP1"
-external="HDMI1"
+# renombrar según los identificadores de monitor definidos en /etc/X11/xorg.conf.d/30-monitor.conf
+internal="eDP-1"
+external="HDMI-1"
 
 if [ "$(xrandr | grep "$external" | awk '{print $2}')" == "disconnected" ]; then
 		xrandr --output $internal --auto &&
-		dunstify -t 1000 -r 10 -i dialog-information "$external disconnected"
-		canberra-gtk-play -i dialog-information
+		echo "$external disconnected" | dmenu
 		exit 1
 fi
 
-dmenufont="monospace:size=10"
 list=("Clone\nInternal\nExternal\nExtended right\nExtended left\nExtended above")
-choice=$(echo -e "$list" | dmenu -fn "$dmenufont")
-
+choice=$(echo -e "$list" | dmenu)
 
 case "$choice" in
 	"Clone")
 		xrandr --output $internal --auto --output $external --auto --same-as $internal &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display Clone"
-		canberra-gtk-play -i dialog-information
+		msg="Display Clone"
 		;;
 	"Internal")
 		xrandr --output $internal --auto --output $external --off &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display Internal"
-		canberra-gtk-play -i dialog-information
+		msg="Display Internal"
 		;;
 	"External")
 		xrandr --output $internal --off --output $external --auto &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display External"
-		canberra-gtk-play -i dialog-information
+		msg="Display External"
 		;;
 	"Extended right")
 		xrandr --output $internal --auto --primary --output $external --auto --right-of $internal &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display Extended Right"
-		canberra-gtk-play -i dialog-information
+		msg="Display Extended Right"
 		;;
 	"Extended left")
 		xrandr --output $internal --auto --primary --output $external --auto --left-of $internal &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display Extended Left"
-		canberra-gtk-play -i dialog-information
+		msg="Display Extended Left"
 		;;
 	"Extended above")
 		xrandr --output $internal --auto --primary --output $external --auto --above $internal &&
-		dunstify -t 1000 -r 10 -i dialog-information "Display Extended Above"
-		canberra-gtk-play -i dialog-information
+		msg="Display Extended Above"
 		;;
 esac
+
+if [ -n "$msg" ]; then
+	dunstify -t 1000 -r 10 -i dialog-information "$msg"
+	canberra-gtk-play -i dialog-information
+fi

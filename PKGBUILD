@@ -1,3 +1,4 @@
+# Maintainer: Ariel Armijo <arielarmijo@yahoo.es>
 pkgname=dwm
 pkgver=6.2
 pkgrel=1
@@ -5,17 +6,17 @@ pkgdesc="A dynamic window manager for X"
 url="http://dwm.suckless.org"
 arch=('x86_64')
 license=('MIT')
-depends=('libx11' 'libxinerama' 'libxft' 'freetype2' 'dmenu' 'rxvt-unicode')
+depends=('libx11' 'libxinerama' 'libxft' 'dmenu' 'rxvt-unicode')
 provides=('dwm')
 conflicts=('dwm')
-source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
-		config.h
+source=(file://$pkgname-$pkgver.tar.gz
+		dwm-patches.diff
 		dwm.desktop
-		dwm-patches.diff)
+		config.h)
 
-sha256sums=(97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e
-			SKIP
-			SKIP
+sha256sums=(6d2b6315f606d171b0ee437b163682a964133b43bab2446afb405f08f655f5b3
+			2a15dd1456d4af73de1153fe1f763f7d24dbd9673f15a7262afb962b003ad8ca		
+			925c0a8b2026f0dd6450517898db74e628dda7518b7908b9dbcab6714a8407d5
 			SKIP)
 
 prepare() {
