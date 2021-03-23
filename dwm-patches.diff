@@ -1,6 +1,6 @@
 diff -up a/config.def.h b/config.def.h
---- a/config.def.h	2021-03-20 15:25:54.370109602 -0300
-+++ b/config.def.h	2021-03-20 15:38:30.293475431 -0300
+--- a/config.def.h	2021-03-20 15:25:54.000000000 -0300
++++ b/config.def.h	2021-03-23 17:18:11.175457381 -0300
 @@ -3,6 +3,11 @@
  /* appearance */
  static const unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -49,7 +49,7 @@ diff -up a/config.def.h b/config.def.h
  static const Rule rules[] = {
  	/* xprop(1):
  	 *	WM_CLASS(STRING) = instance, class
-@@ -29,27 +54,44 @@ static const Rule rules[] = {
+@@ -29,18 +54,27 @@ static const Rule rules[] = {
  	/* class      instance    title       tags mask     isfloating   monitor */
  	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
  	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
@@ -77,10 +77,7 @@ diff -up a/config.def.h b/config.def.h
  };
  
  /* key definitions */
--#define MODKEY Mod1Mask
-+#define MODKEY Mod4Mask
- #define TAGKEYS(KEY,TAG) \
- 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+@@ -50,6 +84,14 @@ static const Layout layouts[] = {
  	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
  	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
  	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
@@ -95,14 +92,11 @@ diff -up a/config.def.h b/config.def.h
  
  /* helper for spawning shell commands in the pre dwm-5.0 fashion */
  #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-@@ -57,25 +99,33 @@ static const Layout layouts[] = {
- /* commands */
- static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+@@ -59,23 +101,31 @@ static char dmenumon[2] = "0"; /* compon
  static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
--static const char *termcmd[]  = { "st", NULL };
-+static const char *termcmd[]  = { "urxvtc", NULL };
-+
+ static const char *termcmd[]  = { "st", NULL };
  
++
  static Key keys[] = {
  	/* modifier                     key        function        argument */
  	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
@@ -164,8 +158,8 @@ diff -up a/config.def.h b/config.def.h
  };
 -
 diff -up a/config.mk b/config.mk
---- a/config.mk	2021-03-20 15:25:54.370109602 -0300
-+++ b/config.mk	2021-03-20 15:37:55.230140588 -0300
+--- a/config.mk	2021-03-20 15:25:54.000000000 -0300
++++ b/config.mk	2021-03-23 17:18:50.468791560 -0300
 @@ -4,11 +4,11 @@ VERSION = 6.2
  # Customize below to fit your system
  
@@ -182,8 +176,8 @@ diff -up a/config.mk b/config.mk
  # Xinerama, comment if you don't want it
  XINERAMALIBS  = -lXinerama
 diff -up a/dwm.1 b/dwm.1
---- a/dwm.1	2021-03-20 15:25:54.373442935 -0300
-+++ b/dwm.1	2021-03-20 15:36:38.680137294 -0300
+--- a/dwm.1	2021-03-20 15:25:54.000000000 -0300
++++ b/dwm.1	2021-03-23 17:18:11.158790714 -0300
 @@ -29,6 +29,9 @@ color. The tags of the focused window ar
  top left corner.  The tags which are applied to one or more windows are
  indicated with an empty square in the top left corner.
@@ -195,8 +189,8 @@ diff -up a/dwm.1 b/dwm.1
  .SH OPTIONS
  .TP
 diff -up a/dwm.c b/dwm.c
---- a/dwm.c	2021-03-20 15:25:54.373442935 -0300
-+++ b/dwm.c	2021-03-20 15:36:38.723470629 -0300
+--- a/dwm.c	2021-03-20 15:25:54.000000000 -0300
++++ b/dwm.c	2021-03-23 18:18:42.132202687 -0300
 @@ -47,22 +47,49 @@
  /* macros */
  #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -420,10 +414,10 @@ diff -up a/dwm.c b/dwm.c
  		{
  			c->isfloating = r->isfloating;
  			c->tags |= r->tags;
-+			if ((r->tags & SPTAGMASK) && r->isfloating) {
-+				c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-+				c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
-+			}
++//			if ((r->tags & SPTAGMASK) && r->isfloating) {
++			//	c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
++			//	c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
++//			}
 +
  			for (m = mons; m && m->num != r->monitor; m = m->next);
  			if (m)
@@ -899,13 +893,13 @@ diff -up a/dwm.c b/dwm.c
  		XRaiseWindow(dpy, c->win);
 -	attach(c);
 +	if (c->isfloating && c->x == 0 && c->y == (c->mon->showbar ? bh : 0)) {
-+		if (t) {
-+			c->x = t->x + WIDTH(t) / 2 - WIDTH(c) / 2;
-+			c->y = t->y + HEIGHT(t) / 2 - HEIGHT(c) / 2;
-+		} else {
++//		if (t) {
++//			c->x = t->x + WIDTH(t) / 2 - WIDTH(c) / 2;
++//			c->y = t->y + HEIGHT(t) / 2 - HEIGHT(c) / 2;
++//		} else {
 +			c->x = c->mon->mx + (c->mon->mw / 2 - WIDTH(c) / 2);
 +			c->y = c->mon->my + (c->mon->mh / 2 - HEIGHT(c) / 2);
-+		}
++//		}
 +	}
 +	if( attachbelow )
 +		attachBelow(c);
@@ -1244,10 +1238,10 @@ diff -up a/dwm.c b/dwm.c
  	if (!c)
  		return;
  	if (ISVISIBLE(c)) {
-+		if ((c->tags & SPTAGMASK) && c->isfloating) {
-+			c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-+			c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
-+		}
++//		if ((c->tags & SPTAGMASK) && c->isfloating) {
++			//c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
++			//c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
++//		}
  		/* show clients top down */
  		XMoveWindow(dpy, c->win, c->x, c->y);
  		if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
