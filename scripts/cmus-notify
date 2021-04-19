@@ -1,1 +1,22 @@
-/home/aarmijo/.local/bin/cmus-notify
+#!/bin/bash
+
+song="$(cmus-remote -Q | grep "tag title " | sed 's/tag\ title\ //')"
+album="$(cmus-remote -Q | grep "tag album " | sed 's/tag\ album\ //')"
+artist="$(cmus-remote -Q | grep "tag artist " | sed 's/tag\ artist\ //')"
+cmus_state="$(cmus-remote -Q | grep status | sed 's/status\ //')"
+file="$(cmus-remote -Q | grep file | sed 's/file\ //')"
+cover="$(dirname "$file")/Cover.jpg"
+
+case $cmus_state in
+	playing )
+		icon=player_play
+		;;
+	paused )
+		icon=player_pause
+		;;
+	stopped )
+		icon=player_stop
+		;;
+esac
+
+dunstify -t 2500 -r 500 -i $icon "$song" "$album\n$artist"

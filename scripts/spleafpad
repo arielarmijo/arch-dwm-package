@@ -1,1 +1,7 @@
-/home/aarmijo/.local/bin/spleafpad
+#!/bin/bash
+
+leafpad --name spleafpad &
+sleep 0.1
+wid=$(wmctrl -lx | awk '/spleafpad.Leafpad/ {print $1}')
+echo $wid
+wmctrl -i -r $wid -e '0,1280,60,600,650'

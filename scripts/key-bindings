@@ -1,1 +1,163 @@
-/home/aarmijo/.local/bin/key-bindings
+#!/bin/bash
+# Scritp to manage key bindings.
+# Dependencies:
+#   dunst
+#   acpilight
+#   alsa-utils
+#	playerctl
+#   xorg-xset
+#   gnome-icon-theme
+#   feh
+#   i3lock
+#   xkblayout-state-git
+#   urxvt
+# Variables
+time=1000
+
+# Main
+case $1 in
+
+	caps-lock )
+		state="$(sleep 0.2; xset q | grep "Caps Lock" | awk -F" " '{print $4}')"
+		dunstify -t $time -r 100 -i dialog-information "Caps Lock $state"
+		canberra-gtk-play -i dialog-information
+	    kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
+		;;
+    
+	num-lock )
+		state="$(sleep 0.2; xset q | grep "Num Lock" | awk -F" " '{print $8}')"
+		dunstify -t $time -r 100 -i dialog-information "Num Lock $state"
+		canberra-gtk-play -i dialog-information
+		;;
+	
+	backlight-up )
+		xbacklight -inc 2
+		brightness=$(xbacklight -get)
+		dunstify -t $time -r 200 -i dialog-information "Backlight ${brightness%.*}%"
+		;;
+	
+	backlight-down )
+		xbacklight -dec 2
+		brightness=$(xbacklight -get)
+		dunstify -t $time -r 200 -i dialog-information "Backlight ${brightness%.*}%"
+		;;
+	
+	volume-up )
+		amixer set Master 5%+
+		volume="$(amixer get Master | grep -m 1 '%' | awk -F'[][]' '{ print $2 }')"
+		dunstify -t $time -r 300 -i audio-volume-high "Volume $volume"
+		;;
+	
+	volume-down )
+		amixer set Master 5%-
+		volume="$(amixer get Master | grep -m 1 '%' | awk -F'[][]' '{ print $2 }')"
+		dunstify -t $time -r 300 -i audio-volume-low "Volume $volume"
+		;;
+	
+	volume-mute )
+		amixer set Master toggle
+		if [ -n "$(amixer get Master | grep -w -m 1 "off")" ]
+		then
+			dunstify -t $time -r 400 -i audio-volume-muted "Volume muted"
+		else
+			volume="$(amixer get Master | grep -m 1 '%' | awk -F'[][]' '{ print $2 }')"
+			dunstify -t $time -r 400 -i audio-volume-medium "Volume $volume"
+		fi
+		;;
+
+	player-play )
+		playerctl play-pause
+		if [ $? -eq 1 ]
+		then
+			urxvtc -name spcmus -e cmus
+		fi
+		;;
+	
+	player-previous )
+		playerctl previous
+		;;
+
+	player-next )
+		playerctl next
+		;;
+
+	screen-shot )
+		scrot '%Y-%m-%d-%T_screenshot.png'
+		canberra-gtk-play -i camera-shutter
+		;;
+	
+	screen-shot-focused )
+		scrot -u '%Y-%m-%d-%T_screenshot.png'
+		canberra-gtk-play -i camera-shutter
+		;;
+	
+	screen-off )
+		sleep 0.5  && xset dpms force off
+		;;
+	
+	screen-lock )
+		image=$(cat ~/.fehbg | grep feh | awk '{print $4}' | sed 's/\x27//g')
+		i3lock -nti $image
+		;;
+    
+	toggle-autolock )
+		previous_state="$(xset q | grep "DPMS is" | awk -F" " '{print $3}')"
+		if [ $previous_state = "Enabled" ]
+		then
+			xautolock -disable
+			xset s off -dpms
+		else
+			xautolock -enable
+			xset s on +dpms
+		fi
+		current_state="$(xset q | grep "DPMS is" | awk -F" " '{print $3}')"
+		dunstify -t $time -r 600  -i dialog-information "Screen Auto Lock $current_state"
+		canberra-gtk-play -i dialog-information
+		;;
+	
+	keyboard-toggle )
+		layout="$(xkblayout-state print %c)"
+		layouts="$(xkblayout-state print %C)"
+		#xkblayout-state set $((($layout+1)%$layouts)) && kill -SIGTERM $(pgrep statusbar) && ~/.local/bin/statusbar 
+		xkblayout-state set $((($layout+1)%$layouts)) && kill -SIGTERM $(pgrep -fxu $USER "sleep 5") 
+		;;
+
+	toggle-touchpad )
+		touchpad="ELAN1401:00 04F3:30F2 Touchpad"
+		isEnabled=$(xinput --list-props "$touchpad" | grep "Device Enabled" | awk '{print $NF}')
+		if [ "$isEnabled" == "1" ]; then
+			xinput --disable "$touchpad"
+		dunstify -t $time -r 600  -i dialog-information "Touchpad Disabled"
+		else
+			xinput --enable "$touchpad"
+		dunstify -t $time -r 600  -i dialog-information "Touchpad Enabled"
+		fi
+		canberra-gtk-play -i dialog-information
+		;;
+	
+	session-kill )
+		loginctl | grep $USER | awk '{print $1}' | xargs loginctl terminate-session
+		;;
+	
+	open )
+		case $2 in
+		ranger )
+			urxvtc -name ranger -e ranger
+			;;
+
+		* )
+			$2
+			;;
+		esac
+		;;
+
+	restart-volumeicon )
+		pid=$(pidof volumeicon)
+		[[ -n $pid ]] && kill $pid
+		volumeicon &
+		;;
+	* )
+		echo "Opción no reconocida."
+		;;
+
+esac
