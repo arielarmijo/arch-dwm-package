@@ -1,17 +1,1 @@
-#!/usr/bin/bash
-
-usbdrives=$(lsblk -rp | awk '/\/run\/media\/aarmijo\// {printf "%s (%s)\n", $1, $4}')
-
-if [ -z "$usbdrives" ]; then
-	echo "Nada que desmontar" | dmenu
-	exit 1
-else
-	usbdrive=$(echo "$usbdrives" | dmenu)
-	if [ $? -eq 1 ]; then
-		echo "Operación cancelada."
-		exit 1
-	else
-		device=$(echo $usbdrive | awk '{print $1}')
-		dunstify "$(udisksctl unmount -b $usbdrive)"
-	fi
-fi
+/home/aarmijo/.local/bin/dmenu_unmount

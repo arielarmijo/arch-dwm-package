@@ -35,12 +35,12 @@ typedef struct {
 	const char *name;
 	const void *cmd;
 } Sp;
-const char *spcmd1[] = {"urxvtc", "-name", "spterm", "-g", "82x22+1094+19", NULL };
-const char *spcmd2[] = {"urxvtc", "-name", "spranger", "-g", "134x32", "-e", "ranger", NULL };
+const char *spcmd1[] = {"urxvtc", "-name", "spterm", "-g", "82x22+1086+31", NULL };
+const char *spcmd2[] = {"/home/aarmijo/.local/bin/spleafpad", NULL };
 static Sp scratchpads[] = {
-	/* name          cmd  */
+	/* name         cmd  */
 	{"spterm",      spcmd1},
-	{"spranger",    spcmd2},
+	{"spleafpad",   spcmd2},
 };
 
 static const Rule rules[] = {
@@ -50,7 +50,7 @@ static const Rule rules[] = {
 	 */
 	/* class				instance			title			    tags mask     isfloating   monitor */
 	{ NULL,		 			"spterm",			NULL,				SPTAG(0),		1,			 -1 },
-	{ NULL,		 			"spranger",			NULL,				SPTAG(1),		1,			 -1 },
+	{ NULL,		 			"spleafpad",		NULL,				SPTAG(1),		1,			 -1 },
 	{ "Blueman-manager",	"blueman-manager",	NULL,				0,				1,           -1 },
 	{ "GoldenDict",			"goldendict",		NULL,				0,				1,           -1 },
 	{ "Galculator",			"galculator",		NULL,				0,				1,           -1 },
@@ -113,6 +113,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_h,			setmfact,       {.f = -0.05} },
 	{ MODKEY|ShiftMask,             XK_h,			setcfact,       {.f = -0.25} },
 	{ MODKEY,                       XK_i,			incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,   			XK_i,  	   		togglescratch,  {.ui = 1 } },
 	{ MODKEY,						XK_j,			focusstack,     {.i = INC(+1)} },
 	{ MODKEY|ShiftMask,    			XK_j,			pushstack,      {.i = INC(+1)} },
 	{ MODKEY,              			XK_k,			focusstack,     {.i = INC(-1)} },
@@ -128,7 +129,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,				XK_p,			spawn,			SHCMD("~/.local/bin/key-bindings open pcmanfm") },
 	{ MODKEY,						XK_q,      		killclient,     {0} },
 	{ MODKEY,                       XK_r,      		setlayout,      {.v = &layouts[4]} },
-	{ MODKEY|ShiftMask,    			XK_r,	   		togglescratch,  {.ui = 1 } },
+	{ MODKEY|ShiftMask,    			XK_r,	   		spawn,			SHCMD("~/.local/bin/key-bindings open ranger") },
 	{ MODKEY,                       XK_t,      		setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,						XK_u,			spawn,			SHCMD("~/.local/bin/dmenu_mount") },
 	{ MODKEY|ShiftMask,				XK_u,			spawn,			SHCMD("~/.local/bin/dmenu_unmount") },
@@ -197,7 +198,7 @@ static Button buttons[] = {
 	{ ClkWinTitle,          0,				Button5,        focusstack,		{.i = INC(+1)} },
 	{ ClkWinTitle,         	MODKEY,			Button5,        pushstack,		{.i = INC(+1)} },
 
-	{ ClkStatusText,        0,              Button1,        spawn,          SHCMD("~/.local/bin/key-bindings open gsimplecal") },
+	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD("~/.local/bin/key-bindings open gsimplecal") },
 
 	{ ClkClientWin,         MODKEY,			Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,			Button2,        togglefloating, {0} },
