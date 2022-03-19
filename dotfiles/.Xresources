@@ -1,18 +1,19 @@
 ! font options
-Xft.autohint:	0
-Xft.lcdfilter:	lcddefault
-Xft.hintstyle:	hintslight
-Xft.hinting: 	1
-Xft.antialias:  1
+Xft.dpi:		96
+Xft.antialias:  true
 Xft.rgba:		rgb
+Xft.hinting: 	true
+Xft.hintstyle:	hintslight
+Xft.autohint:	false
+Xft.lcdfilter:	lcddefault
 
 ! urxvt
 URxvt*termName:			rxvt-unicode
 URxvt*buffered:			true
 URxvt*cursorBlink:		true
 URxvt*underlineColor:	blue
-URxvt*font:				xft:DejaVuSansMono Nerd Font:size=13
-URxvt*boldFont:			xft:DejaVuSansMono Nerd Font:bold:size=13 
+URxvt*font:				xft:DejaVuSansMono Nerd Font:size=14,xft:JoyPixels:pixelsize=14
+URxvt*boldFont:			xft:DejaVuSansMono Nerd Font:bold:size=14 
 URxvt*depth:			32
 URxvt*background:		rgba:0000/0043/0054/c800
 URxvt*borderless:		true
@@ -28,6 +29,7 @@ URxvt*scrollTtyKeypress:true
 URxvt.perl-ext-common:	default,matcher,resize-font,vtwheel,bell-command
 URxvt.url-launcher:		/usr/bin/xdg-open 
 URxvt.matcher.button:	1
+URxvt.colorUL:			#4682B4
 URxvt.bell-command:		canberra-gtk-play -i bell	
 URxvt.iso14755:			false
 URxvt.iso14755_52:		false

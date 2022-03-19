@@ -11,7 +11,7 @@ static const int showsystray        = 1;		/* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int statmonval			= 0;		/* staticstatus */
-static const char *fonts[]			= { "DejaVuSansMono Nerd Font:size=10" };
+static const char *fonts[]			= { "DejaVuSansMono Nerd Font:size=10", "JoyPixels:pixelsize=10" };
 static const char dmenufont[]		= "DejaVuSansMono Nerd Font:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -31,11 +31,12 @@ static const char *colors[][3]      = {
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
+/* scratchpads */
 typedef struct {
 	const char *name;
 	const void *cmd;
 } Sp;
-const char *spcmd1[] = {"urxvtc", "-name", "spterm", "-g", "82x22+1086+31", NULL };
+const char *spcmd1[] = {"/home//aarmijo/.local/bin/spterm", NULL };
 const char *spcmd2[] = {"/home/aarmijo/.local/bin/spleafpad", NULL };
 static Sp scratchpads[] = {
 	/* name         cmd  */
@@ -43,6 +44,7 @@ static Sp scratchpads[] = {
 	{"spleafpad",   spcmd2},
 };
 
+/* rules */
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -58,7 +60,7 @@ static const Rule rules[] = {
 	{ "mpv",				"gl",				NULL,				0,				1,           -1 },
 	{ "Pavucontrol",		"pavucontrol",		NULL,				0,				1,           -1 },
 	{ "Transmission-gtk",	"transmission-gtk",	NULL,				1 << 8,			0,           -1 },
-	{ "URxvt",				"cmus",				NULL,				1 << 8,			0,           -1 },
+	{ NULL,					"cmus",				NULL,				1 << 8,			0,           -1 },
 	{ "Xsane",				NULL,				NULL,				0,				1,           -1 },
 };
 
@@ -101,15 +103,17 @@ static const char *dmenucmd[]	= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]	= { "urxvtc", NULL };
 static const char *xkillcmd[]	= { "xkill", NULL };
 
-
+/* shortcuts */
 #include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_b,			togglebar,      {0} },
+	{ MODKEY,                       XK_c,      		setlayout,      {.v = &layouts[6]} },
 	{ MODKEY|ShiftMask,				XK_c,			spawn,			SHCMD("~/.local/bin/key-bindings open chromium") },
 	{ MODKEY,                       XK_d,      		incnmaster,     {.i = -1 } },
 	{ MODKEY,						XK_e,			spawn,			SHCMD("~/.local/bin/dmenu_exit") },
 	{ MODKEY,                       XK_f,      		setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,				XK_g,			spawn,			SHCMD("~/.local/bin/key-bindings open galculator") },
 	{ MODKEY,                       XK_h,			setmfact,       {.f = -0.05} },
 	{ MODKEY|ShiftMask,             XK_h,			setcfact,       {.f = -0.25} },
 	{ MODKEY,                       XK_i,			incnmaster,     {.i = +1 } },
@@ -133,7 +137,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      		setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,						XK_u,			spawn,			SHCMD("~/.local/bin/dmenu_mount") },
 	{ MODKEY|ShiftMask,				XK_u,			spawn,			SHCMD("~/.local/bin/dmenu_unmount") },
-	{ MODKEY,                       XK_v,      		setlayout,      {.v = &layouts[6]} },
+	{ MODKEY|ShiftMask,				XK_w,			spawn,			SHCMD("~/.fehbg") },
 	{ MODKEY,                       XK_y,      		setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,				XK_x,			spawn,			{.v = xkillcmd} },
 
@@ -147,6 +151,11 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, 		spawn,          {.v = termcmd } },
 	{ Mod1Mask|ControlMask,         XK_BackSpace,	quit,			{0} },
 	{ MODKEY,                       XK_Tab,			view,           {0} },
+
+	{ MODKEY,              			XK_Up,			focusstack,     {.i = INC(-1)} },
+	{ MODKEY|ShiftMask,    			XK_Up,			pushstack,      {.i = INC(-1)} },
+	{ MODKEY,						XK_Down,		focusstack,     {.i = INC(+1)} },
+	{ MODKEY|ShiftMask,    			XK_Down,		pushstack,      {.i = INC(+1)} },
 
 	{ MODKEY,                       XK_0,   	   	view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,   	   	tag,            {.ui = ~0 } },
@@ -174,6 +183,7 @@ static Key keys[] = {
 	{ 0,					XF86XK_AudioRaiseVolume,	spawn,			SHCMD("~/.local/bin/key-bindings volume-up") },
 	{ 0,					XF86XK_MonBrightnessUp,		spawn,			SHCMD("~/.local/bin/key-bindings backlight-up") },
 	{ 0,					XF86XK_MonBrightnessDown,	spawn,			SHCMD("~/.local/bin/key-bindings backlight-down") },
+	{ 0,					XF86XK_Calculator,			spawn,			SHCMD("~/.local/bin/key-bindings open galculator") },
 
 	{ MODKEY,				XK_F1,						spawn,			SHCMD("~/.local/bin/key-bindings player-play") },
 	{ MODKEY,				XK_F2,						spawn,			SHCMD("~/.local/bin/key-bindings player-previous") },
@@ -190,7 +200,6 @@ static Key keys[] = {
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkWinTitle,          0,				Button4,        focusstack,		{.i = INC(-1)} },
@@ -222,8 +231,7 @@ static Button buttons[] = {
  * @param: "arg->i" stores the number of tags to shift right (positive value)
  *          or left (negative value)
  */
-void
-shiftview(const Arg *arg) {
+void shiftview(const Arg *arg) {
 	Arg shifted;
 	if(arg->i > 0) // left circular shift
 		shifted.ui = (selmon->tagset[selmon->seltags] << arg->i)

@@ -10,7 +10,7 @@
 #   feh
 #   i3lock
 #   xkblayout-state-git
-#   urxvt
+#   kitty
 # Variables
 time=1000
 
@@ -69,7 +69,8 @@ case $1 in
 		playerctl play-pause
 		if [ $? -eq 1 ]
 		then
-			urxvtc -name spcmus -e cmus
+			#kitty --name cmus -e cmus
+			urxvtc -name cmus -e cmus
 		fi
 		;;
 	
@@ -82,8 +83,9 @@ case $1 in
 		;;
 
 	screen-shot )
-		scrot '%Y-%m-%d-%T_screenshot.png'
-		canberra-gtk-play -i camera-shutter
+		#scrot '%Y-%m-%d-%T_screenshot.png'
+		#canberra-gtk-play -i camera-shutter
+		flameshot gui
 		;;
 	
 	screen-shot-focused )

@@ -26,3 +26,4 @@ makepkg -sci
 - [titlecolor](https://dwm.suckless.org/patches/titlecolor/)
 - [urgentborder](https://dwm.suckless.org/patches/urgentborder/)
 - [urgent tag color](https://github.com/ericpruitt/mydwm/blob/master/patches/00-urgent-tag-color.diff)
+- [emoji hack](https://www.youtube.com/watch?v=0QkByBugq_4)

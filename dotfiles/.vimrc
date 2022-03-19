@@ -1,5 +1,6 @@
 " VIM Configuration file
 set mouse=a
+set nocompatible
 
 " Display
 set title                 " Update the title of your window or your terminal
@@ -39,8 +40,12 @@ let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
 let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
 let s:palette.insert.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
 let s:palette.replace.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:palette.inactive.middle = s:palette.normal.middle
-let s:palette.tabline.middle = s:palette.normal.middle
+let s:palette.inactive.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:palette.tabline.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:palette.tabline.tabsel = [ [ '#d0d0d0', '#5f8787', 231, 236, 'bold' ] ]
+let s:palette.tabline.right = [ [ '#d0d0d0', '#5f8787', 231, 'NONE', 'NONE' ] ]
+let s:palette.tabline.left = [ [ '#d0d0d0', '#5f8787', 252, 233, 'NONE' ] ]
+
 
 " -- Search
 set ignorecase            " Ignore case when searching
@@ -83,4 +88,6 @@ function ToggleFoldMethod()
 endfunction
 
 call plug#begin()
+Plug 'preservim/nerdtree'
+Plug 'sheerun/vim-polyglot'
 call plug#end()

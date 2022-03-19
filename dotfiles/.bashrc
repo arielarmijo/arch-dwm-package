@@ -9,6 +9,12 @@ export EDITOR=/usr/bin/vim
 export VISUAL=/usr/bin/leafpad
 export HISTCONTROL=ignoreboth
 
+# ROS environment setup
+source /opt/ros/noetic/setup.bash
+if [ $EUID -ne 0 ]; then
+	source ~/Proyectos/rplidar/catkin_ws/devel/setup.bash
+fi
+
 none="\[\e[0m\]"
 user="\[\e[1;32m\]"
 host="\[\e[1;36m\]"
@@ -26,11 +32,24 @@ PS1="$user\u$white@$host\h: $dir\w $white\$sym$none "
 
 complete -cf sudo
 
-alias ls='ls --color=auto --group-directories-first'
-alias grep='grep --color=auto'
-alias bt='bluetoothctl'
-alias nf='echo && neofetch'
+alias bg='feh --bg-scale ~/.wallpapers/wallpaper'
 alias bi='acpi -bi'
-alias mirror='wget --mirror --convert-links --page-requisites --no-parent'
+alias bl='cat /sys/class/power_supply/BAT0/charge_control_end_threshold'
+alias bt='bluetoothctl'
 alias clean='sudo pacman -Rns --noconfirm $(pacman -Qtdq) 2>/dev/null || echo -e "\nNo hay paquetes huérfanos\n"; sudo pacman -Sc; aurman -Sc --aur'
-alias rf='sudo reflector --verbose --connection-timeout 15 --protocol http,https --latest 50 --fastest 15 --sort rate --save /etc/pacman.d/mirrorlist'
+alias cm='cmatrix'
+alias grep='grep --color=auto'
+alias gt='gittify'
+alias ls='ls --color=auto --group-directories-first'
+alias nf='echo && neofetch'
+alias rf='sudo reflector --protocol https --delay 1 --latest 100 --sort age --save /etc/pacman.d/mirrorlist'
+
+# prevent nested ranger instances
+ranger() {
+	if [ -z "$RANGER_LEVEL" ]; then
+		env TERMCMD=termite /usr/bin/ranger "$@"
+	else
+		exit
+	fi
+}
+

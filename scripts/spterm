@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#tabbed -c -n spterm -g 900x500+1010+27 urxvt -embed 
+
+urxvt -name spterm -geometry 82x22+1012+24
+
+#kitty --name spterm &
+#sleep 0.18
+#wid=$(wmctrl -lx | awk '/spterm.kitty/ {print $1}')
+#echo $wid
+#wmctrl -i -r $wid -e '0,1034,28,878,510'

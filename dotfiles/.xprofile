@@ -1,16 +1,13 @@
-feh --bg-scale ~/.wallpapers/wallpaper
-
-cmst &
-xbanish &
-picom --experimental-backends -b
-urxvtd -q -o -f
-volumeicon &
-
-~/.local/bin/statusbar
-
+export PATH="${PATH}:$HOME/.local/bin"
 export _JAVA_AWT_WM_NONREPARENTING=1
 #export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
-export PATH="${PATH}:$HOME/.local/bin"
-export VISUAL=/usr/bin/leafpad
 
-#/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+/usr/bin/urxvtd -q -o -f
+/usr/bin/picom --experimental-backends -b
+/usr/bin/feh --bg-scale ~/.wallpapers/wallpaper &
+/usr/bin/cmst -m &
+/usr/bin/volumeicon &
+/usr/bin/xbanish &
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+~/.local/bin/statusbar

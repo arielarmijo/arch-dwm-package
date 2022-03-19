@@ -1,7 +1,7 @@
 #!/bin/bash
 # renombrar según los identificadores de monitor definidos en /etc/X11/xorg.conf.d/30-monitor.conf
-internal="eDP-1"
-external="HDMI-1"
+internal="eDP1"
+external="HDMI1"
 
 if [ "$(xrandr | grep "$external" | awk '{print $2}')" == "disconnected" ]; then
 		xrandr --output $internal --auto &&
