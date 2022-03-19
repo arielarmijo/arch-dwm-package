@@ -1,7 +1,8 @@
 # dwm
-PKGBUILD with custom configuration and patches files for dwm-6.2.
+PKGBUILD with custom configuration and patches files for dwm-6.3.
 
-![alt text](https://github.com/cochayuyo/dwm/blob/master/screenshot.png)
+![Desktop clean](screenshot-clean.png)
+![Desktop dirty](screenshot-dirty.png)
 
 
 # Install
