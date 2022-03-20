@@ -1,7 +1,7 @@
 #!/bin/bash
 
 leafpad --name spleafpad &
-#sleep 0.2
+#sleep 0.18
 #wid=$(wmctrl -lx | awk '/spleafpad.Leafpad/ {print $1}')
 #echo $wid
 #wmctrl -i -r $wid -e '0,1279,28,630,735'

@@ -170,6 +170,24 @@ diff -up a/config.def.h b/config.def.h
  	{ ClkTagBar,            0,              Button1,        view,           {0} },
  	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
  	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
+diff -up a/config.mk b/config.mk
+--- a/config.mk	2022-01-07 08:42:18.000000000 -0300
++++ b/config.mk	2022-03-20 14:17:36.145648027 -0300
+@@ -4,11 +4,11 @@ VERSION = 6.3
+ # Customize below to fit your system
+ 
+ # paths
+-PREFIX = /usr/local
++PREFIX = /usr
+ MANPREFIX = ${PREFIX}/share/man
+ 
+-X11INC = /usr/X11R6/include
+-X11LIB = /usr/X11R6/lib
++X11INC = /usr/include/X11
++X11LIB = /usr/lib/X11
+ 
+ # Xinerama, comment if you don't want it
+ XINERAMALIBS  = -lXinerama
 diff -up a/drw.c b/drw.c
 --- a/drw.c	2022-01-07 08:42:18.000000000 -0300
 +++ b/drw.c	2022-03-20 13:07:37.913665500 -0300
@@ -215,7 +233,7 @@ diff -up a/dwm.1 b/dwm.1
  .TP
 diff -up a/dwm.c b/dwm.c
 --- a/dwm.c	2022-01-07 08:42:18.000000000 -0300
-+++ b/dwm.c	2022-03-20 13:09:31.083741723 -0300
++++ b/dwm.c	2022-03-20 14:18:01.944807279 -0300
 @@ -47,22 +47,46 @@
  /* macros */
  #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -443,10 +461,10 @@ diff -up a/dwm.c b/dwm.c
  		{
  			c->isfloating = r->isfloating;
  			c->tags |= r->tags;
-+			if ((r->tags & SPTAGMASK) && r->isfloating) {
-+				c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-+				c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
-+			}
++//			if ((r->tags & SPTAGMASK) && r->isfloating) {
++//				c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
++//				c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
++//			}
 +
  			for (m = mons; m && m->num != r->monitor; m = m->next);
  			if (m)
@@ -1318,10 +1336,10 @@ diff -up a/dwm.c b/dwm.c
  	if (!c)
  		return;
  	if (ISVISIBLE(c)) {
-+		if ((c->tags & SPTAGMASK) && c->isfloating) {
-+			c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-+			c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
-+		}
++//		if ((c->tags & SPTAGMASK) && c->isfloating) {
++//			c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
++//			c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
++//		}
  		/* show clients top down */
  		XMoveWindow(dpy, c->win, c->x, c->y);
  		if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
