@@ -2,7 +2,8 @@
 
 #tabbed -c -n spterm -g 900x500+1010+27 urxvt -embed 
 
-urxvt -name spterm -geometry 82x22+1012+24
+#urxvt -name spterm -geometry 82x22+1014+24 
+urxvt -name spterm -geometry 83x23 
 
 #kitty --name spterm &
 #sleep 0.18

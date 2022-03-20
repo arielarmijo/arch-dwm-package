@@ -38,10 +38,12 @@ typedef struct {
 } Sp;
 const char *spcmd1[] = {"/home//aarmijo/.local/bin/spterm", NULL };
 const char *spcmd2[] = {"/home/aarmijo/.local/bin/spleafpad", NULL };
+const char *spcmd3[] = {"/home/aarmijo/.local/bin/spcalc", NULL };
 static Sp scratchpads[] = {
 	/* name         cmd  */
 	{"spterm",      spcmd1},
 	{"spleafpad",   spcmd2},
+	{"spcalc",		spcmd3},
 };
 
 /* rules */
@@ -53,6 +55,7 @@ static const Rule rules[] = {
 	/* class				instance			title			    tags mask     isfloating   monitor */
 	{ NULL,		 			"spterm",			NULL,				SPTAG(0),		1,			 -1 },
 	{ NULL,		 			"spleafpad",		NULL,				SPTAG(1),		1,			 -1 },
+	{ NULL,		 			"spcalc",			NULL,				SPTAG(2),		1,			 -1 },
 	{ "Blueman-manager",	"blueman-manager",	NULL,				0,				1,           -1 },
 	{ "GoldenDict",			"goldendict",		NULL,				0,				1,           -1 },
 	{ "Galculator",			"galculator",		NULL,				0,				1,           -1 },
@@ -79,6 +82,7 @@ static const Layout layouts[] = {
 	{ "===",      bstackhoriz },
 	{ "|M|",      centeredmaster },
 	{ ">M>",      centeredfloatingmaster },
+	{ NULL,       NULL },
 };
 
 /* key definitions
@@ -106,14 +110,14 @@ static const char *xkillcmd[]	= { "xkill", NULL };
 /* shortcuts */
 #include <X11/XF86keysym.h>
 static Key keys[] = {
-	/* modifier                     key        function        argument */
+	/* modifier                     key			   function        argument */
 	{ MODKEY,                       XK_b,			togglebar,      {0} },
 	{ MODKEY,                       XK_c,      		setlayout,      {.v = &layouts[6]} },
 	{ MODKEY|ShiftMask,				XK_c,			spawn,			SHCMD("~/.local/bin/key-bindings open chromium") },
 	{ MODKEY,                       XK_d,      		incnmaster,     {.i = -1 } },
 	{ MODKEY,						XK_e,			spawn,			SHCMD("~/.local/bin/dmenu_exit") },
 	{ MODKEY,                       XK_f,      		setlayout,      {.v = &layouts[1]} },
-	{ MODKEY|ShiftMask,				XK_g,			spawn,			SHCMD("~/.local/bin/key-bindings open galculator") },
+	{ MODKEY|ShiftMask,				XK_g,			togglescratch,	{.ui = 2} },
 	{ MODKEY,                       XK_h,			setmfact,       {.f = -0.05} },
 	{ MODKEY|ShiftMask,             XK_h,			setcfact,       {.f = -0.25} },
 	{ MODKEY,                       XK_i,			incnmaster,     {.i = +1 } },
@@ -143,8 +147,10 @@ static Key keys[] = {
 
 	{ MODKEY,                       XK_comma,		focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  		tagmon,         {.i = -1 } },
+	{ MODKEY|ControlMask,			XK_comma,		cyclelayout,    {.i = -1 } },
 	{ MODKEY,                       XK_period, 		focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_period, 		tagmon,         {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_period,		cyclelayout,    {.i = +1 } },
 	{ MODKEY,						XK_space,		spawn,			SHCMD("~/.local/bin/key-bindings keyboard-toggle") },
 	{ MODKEY|ShiftMask,             XK_space,  		togglefloating, {0} },
 	{ MODKEY,                       XK_Return, 		zoom,           {0} },
