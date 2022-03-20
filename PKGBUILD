@@ -6,7 +6,7 @@ pkgdesc="A dynamic window manager for X"
 url="http://dwm.suckless.org"
 arch=('x86_64')
 license=('MIT')
-depends=('libx11' 'libxinerama' 'libxft-bgra' 'dmenu')
+depends=('libx11' 'libxinerama' 'libxft-bgra' 'dmenu' 'rxvt-unicode')
 provides=('dwm')
 conflicts=('dwm')
 source=(file://$pkgname-$pkgver.tar.gz
@@ -26,7 +26,7 @@ prepare() {
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  make
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
