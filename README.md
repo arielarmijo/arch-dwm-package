@@ -16,7 +16,7 @@ makepkg -sci
 - [attachbelow](https://dwm.suckless.org/patches/attachbelow/)
 - [center floating windows](https://github.com/ericpruitt/edge/blob/master/patches/dwm-10-center-floating-windows.diff)
 - [cfacts](https://dwm.suckless.org/patches/cfacts/)
-- [cycle layouts](https://dwm.suckless.org/patches/cyclelayouts/):
+- [cycle layouts](https://dwm.suckless.org/patches/cyclelayouts/)
 - [emoji hack](https://www.youtube.com/watch?v=0QkByBugq_4)
 - [pertag](https://dwm.suckless.org/patches/pertag/)
 - [resizecornes](https://dwm.suckless.org/patches/resizecorners/)
