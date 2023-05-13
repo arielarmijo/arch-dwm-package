@@ -1,4 +1,4 @@
 #!/bin/bash
 
-urxvt -name spterm -geometry 83x23+1001+27 
+urxvt -name spterm -geometry 83x23+1008+27 
 

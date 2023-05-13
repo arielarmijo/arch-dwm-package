@@ -5,12 +5,12 @@ external="HDMI1"
 
 if [ "$(xrandr | grep "$external" | awk '{print $2}')" == "disconnected" ]; then
 		xrandr --output $internal --auto &&
-		echo "$external disconnected" | dmenu
+		echo "$external disconnected" | dmenu -m 0
 		exit 1
 fi
 
 list=("Clone\nInternal\nExternal\nExtended right\nExtended left\nExtended above")
-choice=$(echo -e "$list" | dmenu)
+choice=$(echo -e "$list" | dmenu -m 0)
 
 case "$choice" in
 	"Clone")

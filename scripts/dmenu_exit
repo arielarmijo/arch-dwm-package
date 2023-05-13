@@ -3,7 +3,7 @@
 wallpaper="$(cat ~/.fehbg | grep feh | awk '{print $4}' | sed 's/\x27//g')"
 
 list=("Apagar\nReiniciar\nSuspender\nCerrar sesión\nBloquear pantalla")
-choice=$(echo -e "$list" | dmenu)
+choice=$(echo -e "$list" | dmenu -m 0)
 
 case "$choice" in
 	"Apagar")

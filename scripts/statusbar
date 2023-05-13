@@ -3,6 +3,7 @@
 ############################# Variables ########################################
 
 # Icons for indicators (DejaVuSans Nerd Fonts)
+var_icon=""
 boot_icon=""
 root_icon=""
 home_icon=""
@@ -53,25 +54,8 @@ function kb_layout {
 }
 
 function disk_usage {
-	case $1 in
-		/ )
-			icon=$root_icon
-			usage="$(df -h | awk '{ if ($6 == "/") print $5 }')"
-			;;
-		/boot )
-			icon=$boot_icon
-			usage="$(df -h | awk '{ if ($6 == "/boot") print $5 }')"
-			;;
-		/efi )
-			icon=$boot_icon
-				usage="$(df -h | awk '{ if ($6 == "/efi") print $5 }')"
-			;;
-		/home )
-			icon=$home_icon
-			usage="$(df -h | awk '{ if ($6 == "/home") print $5 }')"
-			;;
-	esac
-
+	icon=$1
+	usage="$(df -h | awk -v partition=$2 '{ if ($6 == partition) print $5 }')"
 	if [ ${usage%?} -ge $disk_usage_max ]; then
 		printf "%s" "$red$icon^f4^$usage$gray"
 	else
@@ -229,11 +213,13 @@ while true; do
 	status=""
 	status+="$(kb_layout)"
 	status+="$sep"
-	status+="$(disk_usage /efi)"
+	status+="$(disk_usage $boot_icon "/efi")"
 	status+="^f8^"
-	status+="$(disk_usage /)"
+	status+="$(disk_usage $var_icon "/var")"
 	status+="^f8^"
-	status+="$(disk_usage /home)"
+	status+="$(disk_usage $root_icon "/")"
+	status+="^f8^"
+	status+="$(disk_usage $home_icon "/home")"
 	status+="$sep"
 	cpu_usage
 	status+="^f8^"
