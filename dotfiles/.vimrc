@@ -19,6 +19,7 @@ set scrolloff=5           " Display at least 3 lines around you cursor
 set timeoutlen=1000
 set ttimeoutlen=10
 
+" Theme
 set background=dark
 let g:solarized_termtrans=1
 colorscheme solarized
@@ -47,7 +48,7 @@ let s:palette.tabline.right = [ [ '#d0d0d0', '#5f8787', 231, 'NONE', 'NONE' ] ]
 let s:palette.tabline.left = [ [ '#d0d0d0', '#5f8787', 252, 233, 'NONE' ] ]
 
 
-" -- Search
+" Search
 set ignorecase            " Ignore case when searching
 set smartcase             " If there is an uppercase in your search term
 set incsearch             " Highlight search results when typing
@@ -87,7 +88,9 @@ function ToggleFoldMethod()
 	echo join(["foldmethod", &foldmethod], "=")
 endfunction
 
+" Plugins
 call plug#begin()
 Plug 'preservim/nerdtree'
 Plug 'sheerun/vim-polyglot'
 call plug#end()
+

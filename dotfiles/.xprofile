@@ -1,13 +1,14 @@
-export PATH="${PATH}:$HOME/.local/bin"
+export PATH="${PATH}:$HOME/.local/bin:$HOME/.nvm/versions/node/v16.19.1/bin"
 export _JAVA_AWT_WM_NONREPARENTING=1
-#export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
 
 /usr/bin/urxvtd -q -o -f
-/usr/bin/picom --experimental-backends -b
+/usr/bin/picom -b
 /usr/bin/feh --bg-scale ~/.wallpapers/wallpaper &
 /usr/bin/cmst -m &
 /usr/bin/volumeicon &
 /usr/bin/xbanish &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-
+#/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+/usr/bin/dbus-update-activation-environment --all &
+/usr/bin/gnome-keyring --start --components=secrets &
 ~/.local/bin/statusbar
