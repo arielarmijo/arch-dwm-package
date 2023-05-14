@@ -54,6 +54,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 static const int attachbelow = 1;    /* 1 means attach after the currently active window */
 
 static const Layout layouts[] = {
@@ -65,24 +66,12 @@ static const Layout layouts[] = {
 	{ "===",      bstackhoriz },
 	{ "|M|",      centeredmaster },
 	{ ">M>",      centeredfloatingmaster },
+	{ "[D]",      deck },
 	{ NULL,       NULL },
 };
 
-/* key definitions
-*	Alt -> Mod1Mask
-* Win -> Mod4Mask */
-#define MODKEY Mod4Mask
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
-/* custom functions declarations */
-static void shiftview(const Arg *arg);
 
 /* commands */
 static char dmenumon[2]			= "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -105,13 +94,30 @@ static Sp scratchpads[] = {
 	{"spcalc",			spcmd3},
 };
 
+/* custom functions declarations */
+static void shiftview(const Arg *arg);
+
+/* key definitions
+*	Alt -> Mod1Mask
+* Win -> Mod4Mask */
+#define MODKEY Mod4Mask
+#define TAGKEYS(KEY,TAG) \
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+
+#define STACKKEYS(MOD,ACTION) \
+	{ MOD, XK_j,     ACTION##stack, {.i = INC(+1) } }, \
+	{ MOD, XK_k,     ACTION##stack, {.i = INC(-1) } },
+
 /* shortcuts */
 #include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key			   function        argument */
 	{ MODKEY,                       XK_b,			togglebar,      {0} },
 	{ MODKEY|ShiftMask,    					XK_b,	   	spawn,					SHCMD("~/.local/bin/key-bindings open blueman-applet") },
-	{ MODKEY,                       XK_c,     setlayout,      {.v = &layouts[6]} },
+	{ MODKEY,                       XK_c,     setlayout,      {.v = &layouts[7]} },
 	{ MODKEY|ShiftMask,							XK_c,			spawn,					SHCMD("~/.local/bin/key-bindings open chromium") },
 	{ MODKEY,                       XK_d,     incnmaster,     {.i = -1 } },
 	{ MODKEY,												XK_e,			spawn,					SHCMD("~/.local/bin/dmenu_exit") },
@@ -121,10 +127,6 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_h,			setcfact,       {.f = -0.25} },
 	{ MODKEY,                       XK_i,			incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,   					XK_i,  	  togglescratch,  {.ui = 1 } },
-	{ MODKEY,												XK_j,			focusstack,     {.i = INC(+1)} },
-	{ MODKEY|ShiftMask,    					XK_j,			pushstack,      {.i = INC(+1)} },
-	{ MODKEY,              					XK_k,			focusstack,     {.i = INC(-1)} },
-	{ MODKEY|ShiftMask,    					XK_k,			pushstack,      {.i = INC(-1)} },
 	{ MODKEY,                       XK_l,			setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_l,			setcfact,       {.f = +0.25} },
 	{ MODKEY,                       XK_m,     setlayout,      {.v = &layouts[2]} },
@@ -140,6 +142,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,     setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,												XK_u,			spawn,					SHCMD("~/.local/bin/dmenu_mount") },
 	{ MODKEY|ShiftMask,							XK_u,			spawn,					SHCMD("~/.local/bin/dmenu_unmount") },
+	{ MODKEY,                       XK_v,     setlayout,      {.v = &layouts[6]} },
 	{ MODKEY|ShiftMask,							XK_w,			spawn,					SHCMD("~/.fehbg") },
 	{ MODKEY,                       XK_y,     setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,							XK_x,			spawn,					{.v = xkillcmd} },
@@ -157,22 +160,8 @@ static Key keys[] = {
 	{ Mod1Mask|ControlMask,         XK_BackSpace,	quit,						{0} },
 	{ MODKEY,                       XK_Tab,				view,           {0} },
 
-	{ MODKEY,              					XK_Up,			focusstack,     {.i = INC(-1)} },
-	{ MODKEY|ShiftMask,    					XK_Up,			pushstack,      {.i = INC(-1)} },
-	{ MODKEY,												XK_Down,		focusstack,     {.i = INC(+1)} },
-	{ MODKEY|ShiftMask,    					XK_Down,		pushstack,      {.i = INC(+1)} },
-
 	{ MODKEY,                       XK_0,   	   	view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,   	   	tag,            {.ui = ~0 } },
-	TAGKEYS(                        XK_1,			0)
-	TAGKEYS(                        XK_2,			1)
-	TAGKEYS(                        XK_3,			2)
-	TAGKEYS(                        XK_4,			3)
-	TAGKEYS(                        XK_5,			4)
-	TAGKEYS(                        XK_6,			5)
-	TAGKEYS(                        XK_7,			6)
-	TAGKEYS(                        XK_8,			7)
-	TAGKEYS(                        XK_9,			8)
 
 	{ 0,					XK_Print,									spawn,			SHCMD("~/.local/bin/key-bindings screen-shot") },
 	{ ShiftMask,	XK_Print,									spawn,			SHCMD("~/.local/bin/key-bindings screen-shot-focused") },
@@ -197,6 +186,19 @@ static Key keys[] = {
 	{ MODKEY,							XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings toggle-autolock") },
 	{ MODKEY|ShiftMask,		XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-lock") },
 	{ MODKEY|ControlMask,	XK_F6,						spawn,			SHCMD("~/.local/bin/key-bindings screen-off") },
+
+	TAGKEYS(XK_1, 0)
+	TAGKEYS(XK_2, 1)
+	TAGKEYS(XK_3, 2)
+	TAGKEYS(XK_4, 3)
+	TAGKEYS(XK_5, 4)
+	TAGKEYS(XK_6, 5)
+	TAGKEYS(XK_7, 6)
+	TAGKEYS(XK_8, 7)
+	TAGKEYS(XK_9, 8)
+	STACKKEYS(MODKEY, focus)
+	STACKKEYS(MODKEY|ShiftMask, push)
+
 };
 
 
