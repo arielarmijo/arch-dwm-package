@@ -1,3 +1,3 @@
-[submodule "dwm source code"]
+[submodule "dwm"]
 	path = dwm
 	url = ./dwm
