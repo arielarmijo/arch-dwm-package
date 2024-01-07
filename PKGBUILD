@@ -12,7 +12,7 @@ conflicts=('dwm')
 source=()
 
 prepare() {
-  cp ../dwm/* .
+  cp ../patched-dwm/* .
   cp ../config.h config.h
 }
 
