@@ -5,25 +5,25 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+clear
 source /usr/share/nvm/init-nvm.sh
+source /usr/share/bash-completion/completions/git
 
 #
 # Run 'nvm use' automatically every time there's 
 # a .nvmrc file in the directory. Also, revert to default 
 # version when entering a directory without .nvmrc
-#
 enter_directory() {
 	if [[ $PWD == $PREV_PWD ]]; then
-		    return
+		return
 	fi
-
 	PREV_PWD=$PWD
 	if [[ -f ".nvmrc" ]]; then
-		    nvm use
-			    NVM_DIRTY=true
-			elif [[ $NVM_DIRTY = true ]]; then
-				    nvm use default
-					    NVM_DIRTY=false
+		nvm use
+		NVM_DIRTY=true
+	elif [[ $NVM_DIRTY = true ]]; then
+		nvm use default
+		NVM_DIRTY=false
 	fi
 }
 
@@ -75,24 +75,39 @@ PS1="$usercolor\u$none@$hostcolor\h: $dircolor\w $branchcolor\$(git_branch) $sym
 
 complete -cf sudo
 
-alias bg='feh --bg-scale ~/.wallpapers/wallpaper'
-alias bi='acpi -bi'
-alias bl='cat /sys/class/power_supply/BAT0/charge_control_end_threshold'
+alias sbg='feh --bg-scale ~/.wallpapers/current'
 alias bt='bluetoothctl'
 alias clean='sudo pacman -Rns --noconfirm $(pacman -Qtdq) 2>/dev/null || echo -e "\nNo hay paquetes huérfanos\n"; sudo pacman -Sc;journalctl --vacuum-time=4weeks ;aurman -Sc --aur'
-alias cm='cmatrix'
 alias grep='grep --color=auto'
-alias gt='gittify'
 alias ls='ls --color=auto --group-directories-first'
-alias nf='echo && neofetch'
+alias nf='neofetch'
 alias rf='sudo reflector --protocol https --delay 1 --latest 100 --sort age --save /etc/pacman.d/mirrorlist'
+alias usedPorts='lsof -i -P -n | grep LISTEN'
 
 # prevent nested ranger instances
 ranger() {
 	if [ -z "$RANGER_LEVEL" ]; then
-		env TERMCMD=termite /usr/bin/ranger "$@"
+		/usr/bin/ranger "$@"
 	else
 		exit
 	fi
+}
+
+vpn() {
+	sudo openfortivpn -c "$HOME/.config/openfortivpn/$1-vpn.config"
+}
+
+vm() {
+  xrandr --addmode VIRTUAL1 1024x576 &&
+  xrandr --output VIRTUAL1 --mode 1024x576 --pos 896x1080 &&
+  adb reverse tcp:1701 tcp:1701 &&
+  adb reverse tcp:9001 tcp:9001 &&
+  weylus --auto-start --no-gui &
+}
+
+print() {
+  device=${PRINTER:-MTP_II}
+  size=$(pdfinfo $1 | awk '$6 == "pts" { printf "Custom.%sx%s", $3, $5 }')
+  lp -d $device -o media=$size $1
 }
 

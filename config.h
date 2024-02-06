@@ -208,12 +208,12 @@ static Key keys[] = {
 static Button buttons[] = {
   /* click                event mask      button          function      argument */
   { ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+  { ClkLtSymbol,          0,              Button4,        cyclelayout,    {.i = INC(-1)} },
+  { ClkLtSymbol,         	0,              Button5,        cyclelayout,    {.i = INC(+1)} },
 
   { ClkWinTitle,          0,              Button2,        zoom,           {0} },
   { ClkWinTitle,          0,              Button4,        focusstack,     {.i = INC(-1)} },
-  { ClkWinTitle,          MODKEY,         Button4,        pushstack,      {.i = INC(-1)} },
   { ClkWinTitle,          0,              Button5,        focusstack,     {.i = INC(+1)} },
-  { ClkWinTitle,         	MODKEY,         Button5,        pushstack,      {.i = INC(+1)} },
 
   { ClkStatusText,        0,              Button3,        spawn,          SHCMD("~/.local/bin/key-bindings open gsimplecal") },
 

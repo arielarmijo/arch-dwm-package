@@ -1,14 +1,17 @@
-export PATH="${PATH}:$HOME/.local/bin:$HOME/.nvm/versions/node/v16.19.1/bin"
+export PATH="${PATH}:$HOME/.nvm/versions/node/v$(cat $HOME/.nvm/alias/default)/bin:$HOME/.local/bin:$HOME/.local/opt/android-sdk/emulator:$HOME/.local/opt/android-sdk/platform-tools"
+export GTK_THEME=Adwaita:dark
+export CURA_WORKDIR=~/Proyectos/3d
 export _JAVA_AWT_WM_NONREPARENTING=1
-export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+#export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
 
 /usr/bin/urxvtd -q -o -f
 /usr/bin/picom -b
-/usr/bin/feh --bg-scale ~/.wallpapers/wallpaper &
+/usr/bin/feh --bg-scale ~/.wallpapers/current &
 /usr/bin/cmst -m &
 /usr/bin/volumeicon &
+/usr/bin/blueman-applet &
 /usr/bin/xbanish &
-#/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/bin/dbus-update-activation-environment --all &
 /usr/bin/gnome-keyring --start --components=secrets &
 ~/.local/bin/statusbar

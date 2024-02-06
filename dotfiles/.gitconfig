@@ -1,0 +1,18 @@
+[user]
+	name = Ariel Armijo
+	email = arielarmijo@yahoo.es
+	signingkey = 5D78CDD8702702BDA7CB58DCC60A2FCDBD3ED1CD
+[includeIf "gitdir:~/Proyectos/blue/"]
+	path = .gitconfig-kranio
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret
+[core]
+	editor = vim
+[commit]
+	gpgsign = true
+[fetch]
+	prune = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
